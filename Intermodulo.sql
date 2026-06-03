@@ -93,6 +93,9 @@ CREATE TABLE Partidos (
     FOREIGN KEY (id_arbitro) REFERENCES Arbitros(id_arbitro) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CONSTRAINT uq_solapamiento_pista UNIQUE (id_pista, fecha, hora)
+) ENGINE=InnoDB;
+
 -- 8. TABLA INTERMEDIA: PAREJAS POR PARTIDO
 CREATE TABLE Participantes_Partido (
     id_partido INT NOT NULL,
