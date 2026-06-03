@@ -55,15 +55,17 @@ CREATE TABLE Jugadores (
     UNIQUE INDEX idx_ranking_unique (ranking) -- El ranking debe ser único si está asignado
 ) ENGINE=InnoDB;
 
--- 5. TABLA PAREJAS (Modalidad Dobles)
+-- 5. TABLA PAREJAS (Modalidad Dobles Estricta)
 CREATE TABLE Parejas (
     id_pareja INT AUTO_INCREMENT,
     id_jugador1 INT NOT NULL,
     id_jugador2 INT NOT NULL,
     PRIMARY KEY (id_pareja),
-    FOREIGN KEY (id_jugador1) REFERENCES Jugadores(id_jugador),
-    FOREIGN KEY (id_jugador2) REFERENCES Jugadores(id_jugador),
-    CONSTRAINT chk_jugadores_distintos CHECK (id_jugador1 <> id_jugador2)
+    FOREIGN KEY (id_jugador1) REFERENCES Jugadores(id_jugador) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (id_jugador2) REFERENCES Jugadores(id_jugador) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT chk_jugadores_distintos CHECK (id_jugador1 <> id_jugador2),
+    -- Evita que exista la pareja (Jugador A, Jugador B) y también (Jugador B, Jugador A)
+    CONSTRAINT uq_pareja UNIQUE (id_jugador1, id_jugador2) 
 ) ENGINE=InnoDB;
 
 -- 6. TABLA ARBITROS
@@ -76,7 +78,7 @@ CREATE TABLE Arbitros (
     PRIMARY KEY (id_arbitro)
 ) ENGINE=InnoDB;
 
--- 7. TABLA PARTIDOS
+-- 7. TABLA PARTIDOS (Se elimina la columna 'modalidad' porque ya sabemos que es dobles)
 CREATE TABLE Partidos (
     id_partido INT AUTO_INCREMENT,
     id_torneo INT NOT NULL,
@@ -85,35 +87,34 @@ CREATE TABLE Partidos (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     ronda VARCHAR(30) NOT NULL,
-    modalidad VARCHAR(15) NOT NULL,
     PRIMARY KEY (id_partido),
     FOREIGN KEY (id_torneo) REFERENCES Torneos(id_torneo) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (id_pista) REFERENCES Pistas(id_pista) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (id_arbitro) REFERENCES Arbitros(id_arbitro) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT chk_modalidad CHECK (modalidad IN ('Individual', 'Dobles'))
+    FOREIGN KEY (id_arbitro) REFERENCES Arbitros(id_arbitro) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- 8. TABLA INTERMEDIA: PARTICIPANTES POR PARTIDO (Resolución de enfrentamiento en 3FN)
--- 8. TABLA INTERMEDIA: PARTICIPANTES POR PARTIDO (Exclusivo para Parejas 2v2)
+-- 8. TABLA INTERMEDIA: PAREJAS POR PARTIDO
 CREATE TABLE Participantes_Partido (
     id_partido INT NOT NULL,
     id_pareja INT NOT NULL,
     es_ganador BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (id_partido, id_pareja), -- La clave es la combinación del partido y la pareja
+    PRIMARY KEY (id_partido, id_pareja), 
     FOREIGN KEY (id_partido) REFERENCES Partidos(id_partido) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_pareja) REFERENCES Parejas(id_pareja) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- 9. TABLA RESULTADOS SETS (Marcador Atómico)
+-- 9. TABLA RESULTADOS SETS (Rediseñada para 3FN Real)
+-- Ahora cada fila registra los juegos que hizo UNA pareja específica en UN set de UN partido.
 CREATE TABLE Resultados_Sets (
-    id_resultado INT AUTO_INCREMENT,
     id_partido INT NOT NULL,
+    id_pareja INT NOT NULL,
     numero_set INT NOT NULL,
-    juegos_participante1 INT NOT NULL,
-    juegos_participante2 INT NOT NULL,
-    PRIMARY KEY (id_resultado),
-    FOREIGN KEY (id_partido) REFERENCES Partidos(id_partido) ON DELETE CASCADE ON UPDATE CASCADE,
+    juegos INT NOT NULL,
+    PRIMARY KEY (id_partido, id_pareja, numero_set),
+    -- Esta FK compuesta asegura que la pareja realmente jugó ese partido
+    FOREIGN KEY (id_partido, id_pareja) 
+        REFERENCES Participantes_Partido(id_partido, id_pareja) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT chk_num_set CHECK (numero_set BETWEEN 1 AND 5),
-    CONSTRAINT chk_juegos_p1 CHECK (juegos_participante1 >= 0),
-    CONSTRAINT chk_juegos_p2 CHECK (juegos_participante2 >= 0)
+    CONSTRAINT chk_juegos CHECK (juegos >= 0)
 ) ENGINE=InnoDB;
