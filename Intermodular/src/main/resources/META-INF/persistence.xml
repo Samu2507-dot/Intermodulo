@@ -7,13 +7,13 @@
     <persistence-unit name="RoomlyPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>com.roomly.model.Anfitrion</class>
-        <class>com.roomly.model.Alojamiento</class>
-        <class>com.roomly.model.Huesped</class>
-        <class>com.roomly.model.Reserva</class>
-        <class>com.roomly.model.OperarioMantenimiento</class>
-        <class>com.roomly.model.Mantenimiento</class>
-        <class>com.roomly.model.Resena</class>
+        <class>entidades.Anfitrion</class>
+        <class>entidades.Alojamiento</class>
+        <class>entidades.Huesped</class>
+        <class>entidades.Reserva</class>
+        <class>entidades.OperarioMantenimiento</class>
+        <class>entidades.Mantenimiento</class>
+        <class>entidades.Resena</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
