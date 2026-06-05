@@ -1,5 +1,5 @@
 package excepciones;
-//Esta excepción es para los errores de inicio de sesión (chequeada)
+
 public class AutenticacionException extends Exception{
 
     public AutenticacionException(){

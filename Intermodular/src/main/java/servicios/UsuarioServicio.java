@@ -1,7 +1,7 @@
 package servicios;
 
 import entidades.*;
-import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
+import excepciones.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.mindrot.jbcrypt.BCrypt;

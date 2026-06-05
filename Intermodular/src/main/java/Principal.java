@@ -32,7 +32,7 @@ public class Principal {
                     "juana1@gmail.com",
                     "666111777",
                     "juan_21",
-                    "juan_password_plana" // Aquí pasas la contraseña limpia, el servicio la encripta
+                    "juan_password_plana"
             );
 
 
@@ -119,7 +119,6 @@ public class Principal {
 
             if (reservaConsultada != null) {
                 System.out.println("\n--- DETALLE DE RESERVA OPTIMIZADA ---");
-                // ¡Ojo a esto! Accedemos al huésped y al anfitrión sin hacer ninguna query extra
                 System.out.println("El Huésped " + reservaConsultada.getHuesped().getNombre() +
                         " ha reservado el alojamiento '" + reservaConsultada.getAlojamiento().getNombre() + "'");
                 System.out.println("El dueño de este alojamiento es: " + reservaConsultada.getAlojamiento().getAnfitrion().getNombre());
