@@ -1,7 +1,7 @@
 package servicios;
 
 import entidades.*;
-import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
+import excepciones.*;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +26,7 @@ public class HuespedServicio {
             Huesped huesped = em.find(Huesped.class, idHuesped);
             Alojamiento alojamiento = em.find(Alojamiento.class, idAlojamiento);
 
-            // Validamos que existan ambos registros en la base de datos antes de operar
+            // Validamos que existan los dos registros
             if (huesped == null) {
                 throw new ReservaInvalidaException("No se puede realizar la reserva: El huésped con ID " + idHuesped + " no existe.");
             }
@@ -46,7 +46,6 @@ public class HuespedServicio {
             return reserva;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            // Encadenamiento de excepciones: preservamos el error original de la base de datos
             throw new ReservaInvalidaException("Fallo crítico al procesar la reserva en la base de datos", e);
         }
     }
@@ -54,7 +53,7 @@ public class HuespedServicio {
     // PUBLICAR RESEÑA
     public Resena publicarResena(Integer idReserva, Integer puntuacion, String comentario) throws ReservaInvalidaException {
 
-        // Validación de rangos permitidos para la puntuación
+        // Validación del 1 al 5
         if (puntuacion == null || puntuacion < 1 || puntuacion > 5) {
             throw new ReservaInvalidaException("La puntuación de la reseña debe estar entre 1 y 5 estrellas.");
         }
