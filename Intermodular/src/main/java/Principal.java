@@ -14,7 +14,7 @@ public class Principal {
         try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("RoomlyPU");
              EntityManager em = emf.createEntityManager()) {
 
-            System.out.println("Conexión correcta con Relaciones!");
+            System.out.println("Conexión correcta!");
 
 
             // CREAR UN ANFITRION
