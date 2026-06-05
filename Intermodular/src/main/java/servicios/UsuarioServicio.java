@@ -1,6 +1,7 @@
 package servicios;
 
 import entidades.*;
+import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -14,7 +15,7 @@ public class UsuarioServicio {
     }
 
     // MÉTODO DE AUTENTICACIÓN
-    public Object login(String usuario, String passPlana) {
+    public Object login(String usuario, String passPlana) throws AutenticacionException {
 
         // 1. INTENTAR LOGIN COMO ANFITRIÓN
         try {
@@ -59,11 +60,12 @@ public class UsuarioServicio {
 
         }
 
-        return null; // ¡AQUÍ ESTÁ LA SOLUCIÓN! Si ningún login es correcto, devolvemos null
+        // LANZAMOS NUESTRA EXCEPCIÓN PERSONALIZADA SI LAS CREDENCIALES SON ERRÓNEAS O NO EXISTE EL USUARIO
+        throw new AutenticacionException("Error de autenticación: El nombre de usuario o la contraseña introducidos no coinciden con ningún registro.");
     }
 
     // REGISTRO Y ENCRIPTACIÓN ANFITRIÓN
-    public Anfitrion registrarAnfitrion(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) {
+    public Anfitrion registrarAnfitrion(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) throws AutenticacionException {
         Anfitrion a = new Anfitrion();
         a.setNombre(nombre);
         a.setApellidos(apellidos);
@@ -76,13 +78,18 @@ public class UsuarioServicio {
         a.setPass(hashEncriptado);
 
         em.getTransaction().begin();
-        em.persist(a);
-        em.getTransaction().commit();
-        return a;
+        try {
+            em.persist(a);
+            em.getTransaction().commit();
+            return a;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new AutenticacionException("No se pudo registrar el anfitrión en la base de datos", e);
+        }
     }
 
     // REGISTRO Y ENCRIPTACIÓN HUÉSPED
-    public Huesped registrarHuesped(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) {
+    public Huesped registrarHuesped(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) throws AutenticacionException {
         Huesped h = new Huesped();
         h.setNombre(nombre);
         h.setApellidos(apellidos);
@@ -95,8 +102,13 @@ public class UsuarioServicio {
         h.setPass(hashEncriptado);
 
         em.getTransaction().begin();
-        em.persist(h);
-        em.getTransaction().commit();
-        return h;
+        try {
+            em.persist(h);
+            em.getTransaction().commit();
+            return h;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new AutenticacionException("No se pudo registrar el huésped en la base de datos", e);
+        }
     }
 }

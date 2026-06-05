@@ -1,6 +1,7 @@
 package servicios;
 
 import entidades.*;
+import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,11 +15,24 @@ public class HuespedServicio {
     }
 
     // REALIZAR RESERVA
-    public Reserva realizarReserva(Integer idHuesped, Integer idAlojamiento, LocalDate entrada, LocalDate salida, BigDecimal precioTotal) {
+    public Reserva realizarReserva(Integer idHuesped, Integer idAlojamiento, LocalDate entrada, LocalDate salida, BigDecimal precioTotal) throws ReservaInvalidaException {
+
+        if (salida != null && entrada != null && salida.isBefore(entrada)) {
+            throw new ReservaInvalidaException("La fecha de salida no puede ser anterior a la fecha de entrada.");
+        }
+
         em.getTransaction().begin();
         try {
             Huesped huesped = em.find(Huesped.class, idHuesped);
             Alojamiento alojamiento = em.find(Alojamiento.class, idAlojamiento);
+
+            // Validamos que existan ambos registros en la base de datos antes de operar
+            if (huesped == null) {
+                throw new ReservaInvalidaException("No se puede realizar la reserva: El huésped con ID " + idHuesped + " no existe.");
+            }
+            if (alojamiento == null) {
+                throw new ReservaInvalidaException("No se puede realizar la reserva: El alojamiento con ID " + idAlojamiento + " no existe.");
+            }
 
             Reserva reserva = new Reserva();
             reserva.setHuesped(huesped);
@@ -32,15 +46,26 @@ public class HuespedServicio {
             return reserva;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw e;
+            // Encadenamiento de excepciones: preservamos el error original de la base de datos
+            throw new ReservaInvalidaException("Fallo crítico al procesar la reserva en la base de datos", e);
         }
     }
 
     // PUBLICAR RESEÑA
-    public Resena publicarResena(Integer idReserva, Integer puntuacion, String comentario) {
+    public Resena publicarResena(Integer idReserva, Integer puntuacion, String comentario) throws ReservaInvalidaException {
+
+        // Validación de rangos permitidos para la puntuación
+        if (puntuacion == null || puntuacion < 1 || puntuacion > 5) {
+            throw new ReservaInvalidaException("La puntuación de la reseña debe estar entre 1 y 5 estrellas.");
+        }
+
         em.getTransaction().begin();
         try {
             Reserva reserva = em.find(Reserva.class, idReserva);
+
+            if (reserva == null) {
+                throw new ReservaInvalidaException("No se puede publicar la reseña: La reserva con ID " + idReserva + " no existe.");
+            }
 
             Resena resena = new Resena();
             resena.setReserva(reserva);
@@ -53,7 +78,7 @@ public class HuespedServicio {
             return resena;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw e;
+            throw new ReservaInvalidaException("Fallo crítico al registrar la reseña en la base de datos", e);
         }
     }
 }
