@@ -14,9 +14,6 @@ public class AnfitrionServicio {
         this.em = em;
     }
 
-    // El anfitrión quiere crear un anuncio
-
-    public Alojamiento crearAlojamiento()
 
 
 }
