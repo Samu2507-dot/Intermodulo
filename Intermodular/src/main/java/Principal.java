@@ -1,5 +1,6 @@
 import entidades.*;
 import servicios.*;
+import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -139,8 +140,16 @@ public class Principal {
             }
 
 
+        } catch (AutenticacionException e) {
+            System.out.println("Error de Autenticación: " + e.getMessage());
+        } catch (ReservaInvalidaException e) {
+            System.out.println("Error en la Reserva/Reseña: " + e.getMessage());
+        } catch (MantenimientoException e) {
+            System.out.println("Error de Mantenimiento o Anuncios: " + e.getMessage());
         } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error de configuración de persistencia: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Fallo inesperado del sistema: " + e.getMessage());
         }
     }
 }

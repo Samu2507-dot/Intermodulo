@@ -12,7 +12,7 @@ public class MantenimientoException extends Exception {
         super(mensaje);
     }
 
-   
+
     public MantenimientoException(String mensaje, Throwable causa) {
         super(mensaje, causa);
     }
