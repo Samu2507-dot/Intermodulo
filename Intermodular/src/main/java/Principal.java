@@ -1,5 +1,5 @@
-
 import entidades.*;
+import servicios.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -17,59 +17,53 @@ public class Principal {
             System.out.println("Conexión correcta!");
 
 
+            UsuarioServicio usuarioServ = new UsuarioServicio(em);
+            AnfitrionServicio anfitrionServ = new AnfitrionServicio(em);
+            HuespedServicio huespedServ = new HuespedServicio(em);
+            MantenimientoServicio mantenimientoServ = new MantenimientoServicio(em);
+
+
             // CREAR UN ANFITRION
+            // actualizado para que la contraseña se encripte automáticamente
+            Anfitrion a1 = usuarioServ.registrarAnfitrion(
+                    "Juan",
+                    "Rodriguez Fernandez",
+                    "juana1@gmail.com",
+                    "666111777",
+                    "juan_21",
+                    "juan_password_plana" // Aquí pasas la contraseña limpia, el servicio la encripta
+            );
 
-            Anfitrion a1 = new Anfitrion();
-            a1.setNombre("Juan");
-            a1.setApellidos("Rodriguez Fernandez");
-            a1.setEmail("juana1@gmail.com");
-            a1.setTelefono("666111777");
-            a1.setUsuario("juan_21");
-            a1.setPass("$2a$12$R9h/lS7v7L3H.G5WJkXb2e2G.1bM3G9Z5E7yX8Vw2Q3nRt6Y8u2S.");
-
-            em.getTransaction().begin();
-            em.persist(a1);
-            em.getTransaction().commit();
 
             //CREAR ALOJAMIENTO
-            Alojamiento al1 = new Alojamiento();
-            al1.setNombre("Apartamento Centro Sol");
-            al1.setDireccion("Calle Mayor 14, Madrid");
-            al1.setPrecioDia(new BigDecimal("85.00"));
+            Alojamiento al1 = anfitrionServ.publicarAlojamiento(
+                    a1.getIdAnfitrion(),
+                    "Apartamento Centro Sol",
+                    "Calle Mayor 14, Madrid",
+                    new BigDecimal("85.00")
+            );
 
-
-            al1.setAnfitrion(a1);
-
-            em.getTransaction().begin();
-            em.persist(al1);
-            em.getTransaction().commit();
 
             //CREAR HUESPED
-            Huesped h1 = new Huesped();
-            h1.setNombre("Ana");
-            h1.setApellidos("Sánchez Ruiz");
-            h1.setEmail("ana.sanchez@email.com");
-            h1.setTelefono("677111111");
-            h1.setUsuario("ana_huesped");
-            h1.setPass("$2a$12$e0MbgS/a8U7N9fA3f5.bkuU81E7sIscMvQhks2mIqGZfWbN5Z7pQy");
-
-            em.getTransaction().begin();
-            em.persist(h1);
-            em.getTransaction().commit();
-
-           // CREAR RESERVA
-            Reserva r1 = new Reserva();
-            r1.setFechaEntrada(LocalDate.of(2026, 6, 10));
-            r1.setFechaSalida(LocalDate.of(2026, 6, 15));
-            r1.setPrecioTotal(new BigDecimal("425.00"));
+            Huesped h1 = usuarioServ.registrarHuesped(
+                    "Ana",
+                    "Sánchez Ruiz",
+                    "ana.sanchez@email.com",
+                    "677111111",
+                    "ana_huesped",
+                    "ana_password_plana" // Contraseña en texto plano
+            );
 
 
-            r1.setAlojamiento(al1);
-            r1.setHuesped(h1);
+            // CREAR RESERVA
+            Reserva r1 = huespedServ.realizarReserva(
+                    h1.getIdHuesped(),
+                    al1.getIdAlojamiento(),
+                    LocalDate.of(2026, 6, 10),
+                    LocalDate.of(2026, 6, 15),
+                    new BigDecimal("425.00")
+            );
 
-            em.getTransaction().begin();
-            em.persist(r1);
-            em.getTransaction().commit();
 
             //CREAR OPERARIO MANTENIMIENTO
             OperarioMantenimiento op1 = new OperarioMantenimiento();
@@ -81,43 +75,25 @@ public class Principal {
             em.persist(op1);
             em.getTransaction().commit();
 
+
             //CREAR MANTENIMIENTO
-            Mantenimiento m1 = new Mantenimiento();
-            m1.setFechaInicio(LocalDate.of(2026, 6, 1));
-            m1.setDescripcion("Arreglo de la cisterna del baño principal");
-            m1.setEstado("Pendiente");
+            Mantenimiento m1 = mantenimientoServ.solicitarMantenimiento(
+                    al1.getIdAlojamiento(),
+                    op1.getIdOperario(),
+                    "Arreglo de la cisterna del baño principal"
+            );
 
-
-            m1.setAlojamiento(al1);
-            m1.setOperario(op1);
-
-            em.getTransaction().begin();
-            em.persist(m1);
-            em.getTransaction().commit();
 
             //EJEMPLO DE CREACIÓN DE RESEÑA
-            Resena res1 = new Resena();
-            res1.setPuntuacion(5);
-            res1.setComentario("Excelente ubicación y todo muy limpio.");
-            res1.setFecha(LocalDate.of(2026, 6, 16));
+            Resena res1 = huespedServ.publicarResena(
+                    r1.getIdReserva(),
+                    5,
+                    "Excelente ubicación y todo muy limpio."
+            );
 
 
-            res1.setReserva(r1);
-
-            em.getTransaction().begin();
-            em.persist(res1);
-            em.getTransaction().commit();
-
-           //BUSCAR/MODIFICAR MANTENIMIENTO
-            Mantenimiento mantenimientoAEditar = em.find(Mantenimiento.class, m1.getIdMantenimiento());
-
-            if (mantenimientoAEditar != null) {
-                mantenimientoAEditar.setEstado("Completado");
-
-                em.getTransaction().begin();
-                em.merge(mantenimientoAEditar);
-                em.getTransaction().commit();
-            }
+            //BUSCAR/MODIFICAR MANTENIMIENTO
+            mantenimientoServ.actualizarEstadoMantenimiento(m1.getIdMantenimiento(), "Completado");
 
 
             //CONSULTAS JPQL
@@ -161,7 +137,6 @@ public class Principal {
                         "' tiene el siguiente problema: " + mantPendiente.getDescripcion() +
                         " [Estado: " + mantPendiente.getEstado() + "]");
             }
-
 
 
         } catch (IllegalStateException e) {
