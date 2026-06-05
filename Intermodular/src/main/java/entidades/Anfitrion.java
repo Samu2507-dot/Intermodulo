@@ -1,40 +1,32 @@
 package entidades;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "anfitriones")
 public class Anfitrion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_anfitrion")
+    @Column(name = "id_anfitrion", nullable = false)
     private Integer idAnfitrion;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "apellidos", nullable = false, length = 100)
     private String apellidos;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 15)
+    @Column(name = "telefono", nullable = false, length = 15)
     private String telefono;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "usuario", nullable = false, unique = true, length = 50)
     private String usuario;
 
-    @Column(nullable = false, length = 60)
+    @Column(name = "pass", nullable = false, length = 60)
     private String pass;
-
-    @OneToMany(mappedBy = "anfitrion")
-    private List<Alojamiento> alojamientos;
-
-    // Constructores
-    public Anfitrion() {}
 
     // Getters y Setters
     public Integer getIdAnfitrion() { return idAnfitrion; }
@@ -57,7 +49,4 @@ public class Anfitrion {
 
     public String getPass() { return pass; }
     public void setPass(String pass) { this.pass = pass; }
-
-    public List<Alojamiento> getAlojamientos() { return alojamientos; }
-    public void setAlojamientos(List<Alojamiento> alojamientos) { this.alojamientos = alojamientos; }
 }

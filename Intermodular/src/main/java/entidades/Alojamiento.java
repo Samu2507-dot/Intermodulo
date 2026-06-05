@@ -6,27 +6,23 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "alojamientos")
 public class Alojamiento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_alojamiento")
+    @Column(name = "id_alojamiento", nullable = false)
     private Integer idAlojamiento;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "direccion", nullable = false, length = 255)
     private String direccion;
 
-    @Column(name = "precio_dia", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_dia", nullable = false)
     private BigDecimal precioDia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_anfitrion", nullable = false)
     private Anfitrion anfitrion;
-
-    // Constructores
-    public Alojamiento() {}
 
     // Getters y Setters
     public Integer getIdAlojamiento() { return idAlojamiento; }
