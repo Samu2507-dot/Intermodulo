@@ -7,17 +7,16 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "reservas")
 public class Reserva {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_reserva")
+    @Column(name = "id_reserva", nullable = false)
     private Integer idReserva;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_alojamiento", nullable = false)
     private Alojamiento alojamiento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_huesped", nullable = false)
     private Huesped huesped;
 
@@ -27,11 +26,8 @@ public class Reserva {
     @Column(name = "fecha_salida", nullable = false)
     private LocalDate fechaSalida;
 
-    @Column(name = "precio_total", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_total", nullable = false)
     private BigDecimal precioTotal;
-
-    // Constructores
-    public Reserva() {}
 
     // Getters y Setters
     public Integer getIdReserva() { return idReserva; }

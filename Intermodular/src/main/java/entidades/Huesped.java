@@ -5,32 +5,28 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "huespedes")
 public class Huesped {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_huesped")
+    @Column(name = "id_huesped", nullable = false)
     private Integer idHuesped;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "apellidos", nullable = false, length = 100)
     private String apellidos;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 15)
+    @Column(name = "telefono", nullable = false, length = 15)
     private String telefono;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "usuario", nullable = false, unique = true, length = 50)
     private String usuario;
 
-    @Column(nullable = false, length = 60)
+    @Column(name = "pass", nullable = false, length = 60)
     private String pass;
-
-    // Constructores
-    public Huesped() {}
 
     // Getters y Setters
     public Integer getIdHuesped() { return idHuesped; }

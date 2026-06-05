@@ -6,28 +6,23 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "resenas")
 public class Resena {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_resena")
+    @Column(name = "id_resena", nullable = false)
     private Integer idResena;
 
-    // Relación OneToOne porque tu SQL dice que el id_reserva es UNIQUE en la tabla reseñas.
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "id_reserva", unique = true, nullable = false)
     private Reserva reserva;
 
-    @Column(nullable = false)
+    @Column(name = "puntuacion", nullable = false)
     private Integer puntuacion;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "comentario")
     private String comentario;
 
-    @Column(nullable = false)
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
-
-    // Constructores
-    public Resena() {}
 
     // Getters y Setters
     public Integer getIdResena() { return idResena; }

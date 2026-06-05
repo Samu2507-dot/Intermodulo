@@ -6,37 +6,27 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "mantenimientos")
 public class Mantenimiento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_mantenimiento")
+    @Column(name = "id_mantenimiento", nullable = false)
     private Integer idMantenimiento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_alojamiento", nullable = false)
     private Alojamiento alojamiento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_operario", nullable = false)
     private OperarioMantenimiento operario;
 
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "descripcion", nullable = false, length = 255)
     private String descripcion;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('Pendiente', 'En progreso', 'Completado') DEFAULT 'Pendiente'")
-    private EstadoMantenimiento estado = EstadoMantenimiento.Pendiente;
-
-    // Enum interno para manejar de manera estricta y limpia los 3 estados permitidos de MySQL
-    public enum EstadoMantenimiento {
-        Pendiente, En_progreso, Completado
-    }
-
-    // Constructores
-    public Mantenimiento() {}
+    @Column(name = "estado")
+    private String estado;
 
     // Getters y Setters
     public Integer getIdMantenimiento() { return idMantenimiento; }
@@ -54,6 +44,6 @@ public class Mantenimiento {
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public EstadoMantenimiento getEstado() { return estado; }
-    public void setEstado(EstadoMantenimiento estado) { this.estado = estado; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }
