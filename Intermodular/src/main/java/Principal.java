@@ -1,31 +1,36 @@
 import entidades.*;
 import servicios.*;
-import excepciones.*; // IMPORTAMOS TUS EXCEPCIONES PERSONALIZADAS
+import excepciones.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class Principal {
+
+    private static final Logger log = LoggerFactory.getLogger(Principal.class);
+
     public static void main(String[] args) {
+
+        log.info("Iniciando la aplicación Roomly...");
+        log.info("Conectando con el servidor AWS a través del puerto remoto 3308...");
 
         try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("RoomlyPU");
              EntityManager em = emf.createEntityManager()) {
 
-            System.out.println("Conexión correcta!");
-
+            log.info("✅ Conexión con JPA/Hibernate establecida con éxito en la nube de AWS.");
 
             UsuarioServicio usuarioServ = new UsuarioServicio(em);
             AnfitrionServicio anfitrionServ = new AnfitrionServicio(em);
             HuespedServicio huespedServ = new HuespedServicio(em);
             MantenimientoServicio mantenimientoServ = new MantenimientoServicio(em);
 
-
-            // CREAR UN ANFITRION
-            // actualizado para que la contraseña se encripte automáticamente
+            log.info("👤 Registrando nuevo Anfitrión...");
             Anfitrion a1 = usuarioServ.registrarAnfitrion(
                     "Juan",
                     "Rodriguez Fernandez",
@@ -34,29 +39,29 @@ public class Principal {
                     "juan_21",
                     "juan_password_plana"
             );
+            log.info("🔹 Anfitrión creado con ID: {}", a1.getIdAnfitrion());
 
-
-            //CREAR ALOJAMIENTO
+            log.info("🏠 Publicando nuevo alojamiento para el Anfitrión ID: {}", a1.getIdAnfitrion());
             Alojamiento al1 = anfitrionServ.publicarAlojamiento(
                     a1.getIdAnfitrion(),
                     "Apartamento Centro Sol",
                     "Calle Mayor 14, Madrid",
                     new BigDecimal("85.00")
             );
+            log.info("🔹 Alojamiento publicado con ID: {}", al1.getIdAlojamiento());
 
-
-            //CREAR HUESPED
+            log.info("🧳 Registrando nuevo Huésped...");
             Huesped h1 = usuarioServ.registrarHuesped(
                     "Ana",
                     "Sánchez Ruiz",
                     "ana.sanchez@email.com",
                     "677111111",
                     "ana_huesped",
-                    "ana_password_plana" // Contraseña en texto plano
+                    "ana_password_plana"
             );
+            log.info("🔹 Huésped creado con ID: {}", h1.getIdHuesped());
 
-
-            // CREAR RESERVA
+            log.info("📅 Procesando solicitud de reserva para el Huésped ID: {}", h1.getIdHuesped());
             Reserva r1 = huespedServ.realizarReserva(
                     h1.getIdHuesped(),
                     al1.getIdAlojamiento(),
@@ -64,9 +69,9 @@ public class Principal {
                     LocalDate.of(2026, 6, 15),
                     new BigDecimal("425.00")
             );
+            log.info("🔹 Reserva confirmada con ID: {}", r1.getIdReserva());
 
-
-            //CREAR OPERARIO MANTENIMIENTO
+            log.info("🔧 Creando operario de mantenimiento en el sistema...");
             OperarioMantenimiento op1 = new OperarioMantenimiento();
             op1.setNombre("Técnico Sol");
             op1.setUsuario("tecnico_sol");
@@ -75,80 +80,70 @@ public class Principal {
             em.getTransaction().begin();
             em.persist(op1);
             em.getTransaction().commit();
+            log.info("🔹 Operario persistido con ID: {}", op1.getIdOperario());
 
-
-            //CREAR MANTENIMIENTO
+            log.info("🛠️ Abriendo parte de mantenimiento para el alojamiento ID: {}", al1.getIdAlojamiento());
             Mantenimiento m1 = mantenimientoServ.solicitarMantenimiento(
                     al1.getIdAlojamiento(),
                     op1.getIdOperario(),
                     "Arreglo de la cisterna del baño principal"
             );
 
-
-            //EJEMPLO DE CREACIÓN DE RESEÑA
+            log.info("⭐ Publicando reseña para la reserva ID: {}", r1.getIdReserva());
             Resena res1 = huespedServ.publicarResena(
                     r1.getIdReserva(),
                     5,
-                    "Excelente ubicación y todo muy limpio."
+                    "Excellent location and very clean."
             );
 
+            log.info("🔍 Ejecutando consultas analíticas JPQL...");
 
-            //BUSCAR/MODIFICAR MANTENIMIENTO
-            mantenimientoServ.actualizarEstadoMantenimiento(m1.getIdMantenimiento(), "Completado");
-
-
-            //CONSULTAS JPQL
-
-
-            //Buscar alojamientos económicos
             TypedQuery<Alojamiento> q = em.createQuery(
                     "SELECT a FROM Alojamiento a WHERE a.precioDia <= :precioMaximo", Alojamiento.class);
             q.setParameter("precioMaximo", new BigDecimal("100.00"));
 
             List<Alojamiento> resultado = q.getResultList();
-
-            System.out.println("\n--- LISTADO DE ALOJAMIENTOS ECONÓMICOS ---");
+            log.info("📊 Consulta: Alojamientos económicos encontrados: {}", resultado.size());
             for (Alojamiento a : resultado) {
-                System.out.println("Alojamiento: " + a.getNombre() +
-                        " | Precio: " + a.getPrecioDia() + "€" +
-                        " | Anfitrión: " + a.getAnfitrion().getNombre());
+                log.info("[JPQL - Económico] Alojamiento: {} | Precio: {}€ | Anfitrión: {}",
+                        a.getNombre(), a.getPrecioDia(), a.getAnfitrion().getNombre());
             }
 
-            //buscar reserva y ver datos conectados
             Reserva reservaConsultada = em.find(Reserva.class, r1.getIdReserva());
-
             if (reservaConsultada != null) {
-                System.out.println("\n--- DETALLE DE RESERVA OPTIMIZADA ---");
-                System.out.println("El Huésped " + reservaConsultada.getHuesped().getNombre() +
-                        " ha reservado el alojamiento '" + reservaConsultada.getAlojamiento().getNombre() + "'");
-                System.out.println("El dueño de este alojamiento es: " + reservaConsultada.getAlojamiento().getAnfitrion().getNombre());
+                log.info("[JPQL - Detalle Reserva] Huésped '{}' -> Alojamiento '{}' [Dueño: {}]",
+                        reservaConsultada.getHuesped().getNombre(),
+                        reservaConsultada.getAlojamiento().getNombre(),
+                        reservaConsultada.getAlojamiento().getAnfitrion().getNombre());
             }
 
-            //Controlar mantenimientos pendientes
             TypedQuery<Mantenimiento> qAlertas = em.createQuery(
                     "SELECT m FROM Mantenimiento m " +
                             "WHERE m.estado IN ('Pendiente', 'En progreso')", Mantenimiento.class);
 
             List<Mantenimiento> alertas = qAlertas.getResultList();
-
-            System.out.println("\n--- ALERTAS DE MANTENIMIENTO REQUERIDO ---");
             for (Mantenimiento mantPendiente : alertas) {
-                System.out.println("¡ATENCIÓN! El alojamiento '" + mantPendiente.getAlojamiento().getNombre() +
-                        "' tiene el siguiente problema: " + mantPendiente.getDescripcion() +
-                        " [Estado: " + mantPendiente.getEstado() + "]");
+                log.warn("⚠️ [ALERTA] Mantenimiento requerido en '{}': {} [Estado: {}]",
+                        mantPendiente.getAlojamiento().getNombre(),
+                        mantPendiente.getDescripcion(),
+                        mantPendiente.getEstado());
             }
 
+            log.info("🔄 Actualizando estado del mantenimiento ID: {} a 'Completado'...", m1.getIdMantenimiento());
+            mantenimientoServ.actualizarEstadoMantenimiento(m1.getIdMantenimiento(), "Completado");
+
+            log.info("🏁 Ejecución de la simulación completada con éxito. Todos los datos han sido sincronizados.");
 
         } catch (AutenticacionException e) {
-            System.out.println("Error de Autenticación: " + e.getMessage());
+            log.warn("🚨 Error de Autenticación controlado: {}", e.getMessage());
         } catch (ReservaInvalidaException e) {
-            System.out.println("Error en la Reserva/Reseña: " + e.getMessage());
+            log.warn("🚨 Error en la Reserva/Reseña controlado: {}", e.getMessage());
         } catch (MantenimientoException e) {
-            System.out.println("Error de Mantenimiento o Anuncios: " + e.getMessage());
+            log.warn("🚨 Error de Mantenimiento controlado: {}", e.getMessage());
         } catch (IllegalStateException e) {
-            System.out.println("Error de configuración de persistencia: " + e.getMessage());
+            log.error("💥 Error crítico de configuración de persistencia: {}", e.getMessage());
         } catch (Exception e) {
-            System.out.println("Fallo inesperado del sistema: " + e.getMessage());
+            log.error("💥 Fallo imprevisto y crítico del sistema: ", e);
         }
     }
 }
