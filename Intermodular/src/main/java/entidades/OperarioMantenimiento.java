@@ -2,9 +2,15 @@ package entidades;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa a un Operario de Mantenimiento en el sistema Roomly.
+ * Almacena los datos de identidad, nombre del técnico y credenciales de acceso de los operarios
+ * encargados de revisar y reparar desperfectos en los alojamientos, mapeados con la tabla 'operarios_mantenimiento'.
+ */
 @Entity
 @Table(name = "operarios_mantenimiento")
 public class OperarioMantenimiento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_operario", nullable = false)
@@ -19,7 +25,6 @@ public class OperarioMantenimiento {
     @Column(name = "pass", nullable = false, length = 60)
     private String pass;
 
-    // Getters y Setters
     public Integer getIdOperario() { return idOperario; }
     public void setIdOperario(Integer idOperario) { this.idOperario = idOperario; }
 

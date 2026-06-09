@@ -3,9 +3,14 @@ package entidades;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * Entidad que representa un alojamiento en el sistema Roomly.
+ * Mapea los datos de los inmuebles disponibles para alquiler con la tabla 'alojamientos' en la base de datos.
+ */
 @Entity
 @Table(name = "alojamientos")
 public class Alojamiento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_alojamiento", nullable = false)
@@ -20,11 +25,14 @@ public class Alojamiento {
     @Column(name = "precio_dia", nullable = false)
     private BigDecimal precioDia;
 
+    /**
+     * Anfitrión propietario del alojamiento.
+     * Establece una relación de muchos a uno con la entidad Anfitrion.
+     */
     @ManyToOne
     @JoinColumn(name = "id_anfitrion", nullable = false)
     private Anfitrion anfitrion;
 
-    // Getters y Setters
     public Integer getIdAlojamiento() { return idAlojamiento; }
     public void setIdAlojamiento(Integer idAlojamiento) { this.idAlojamiento = idAlojamiento; }
 

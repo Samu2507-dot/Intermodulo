@@ -6,15 +6,35 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Servicio centralizado de seguridad encargado de la gestión de usuarios en Roomly.
+ * Proporciona la lógica de negocio necesaria para la autenticación unificada (login)
+ * de múltiples perfiles (Anfitriones, Huéspedes y Operarios) y el registro seguro
+ * de cuentas mediante algoritmos de encriptación y hashing robustos (BCrypt).
+ */
 public class UsuarioServicio {
 
     private EntityManager em;
 
+    /**
+     * Construye una nueva instancia del servicio de usuarios.
+     * * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia y consultas.
+     */
     public UsuarioServicio(EntityManager em) {
         this.em = em;
     }
 
-    // MÉTODO DE AUTENTICACIÓN
+    /**
+     * Realiza una autenticación unificada en el sistema comprobando secuencialmente
+     * las credenciales en cada rol del modelo de negocio.
+     * Verifica la existencia del nombre de usuario y valida la contraseña plana
+     * contrastándola contra el hash Bcrypt almacenado de forma segura en la base de datos.
+     * * @param usuario   Nombre de usuario único de la cuenta que intenta acceder.
+     * @param passPlana Contraseña en texto plano introducida en el formulario de inicio de sesión.
+     * @return El objeto de la entidad correspondiente al usuario autenticado (instancia de {@link Anfitrion},
+     * {@link Huesped} o {@link OperarioMantenimiento}).
+     * @throws AutenticacionException Si las credenciales no son correctas o el usuario no existe en ningún rol.
+     */
     public Object login(String usuario, String passPlana) throws AutenticacionException {
 
         // 1. INTENTAR LOGIN COMO ANFITRIÓN
@@ -24,26 +44,25 @@ public class UsuarioServicio {
                     .setMaxResults(1)
                     .getSingleResult();
 
-            // Comparación con el hash almacenado en la base de datos
             if (BCrypt.checkpw(passPlana, anfi.getPass())) {
-                return anfi; // Login correcto
+                return anfi;
             }
         } catch (NoResultException e) {
-
+            // Continuar con el siguiente rol si no se encuentra en este
         }
 
         // 2. INTENTAR LOGIN COMO HUÉSPED
         try {
             Huesped huesped = em.createQuery("SELECT h FROM Huesped h WHERE h.usuario = :user", Huesped.class)
                     .setParameter("user", usuario)
-                    .setMaxResults(1) // Controlamos el máximo de 1 resultado
+                    .setMaxResults(1)
                     .getSingleResult();
 
             if (BCrypt.checkpw(passPlana, huesped.getPass())) {
-                return huesped; // Login correcto
+                return huesped;
             }
         } catch (NoResultException e) {
-
+            // Continuar con el siguiente rol si no se encuentra en este
         }
 
         // 3. INTENTAR LOGIN COMO OPERARIO
@@ -54,17 +73,29 @@ public class UsuarioServicio {
                     .getSingleResult();
 
             if (BCrypt.checkpw(passPlana, ope.getPass())) {
-                return ope; // Login correcto
+                return ope;
             }
         } catch (NoResultException e) {
-
+            // Absorber la excepción para permitir lanzar la alerta global de credenciales erróeanas
         }
 
-        // LANZAMOS NUESTRA EXCEPCIÓN PERSONALIZADA SI LAS CREDENCIALES SON ERRÓNEAS O NO EXISTE EL USUARIO
         throw new AutenticacionException("Error de autenticación: El nombre de usuario o la contraseña introducidos no coinciden con ningún registro.");
     }
 
-    // REGISTRO Y ENCRIPTACIÓN ANFITRIÓN
+    /**
+     * Registra un nuevo Anfitrión en el sistema aplicando políticas de seguridad activa.
+     * Genera un hash Bcrypt con un factor de coste adaptativo (12 rounds de sal) para ocultar la
+     * contraseña en texto plano antes de persistir los datos de forma transaccional.
+     * * @param nombre      Nombre de pila del anfitrión.
+     * @param apellidos   Apellidos del anfitrión.
+     * @param email       Dirección de correo electrónico (debe ser única).
+     * @param telefono    Número telefónico de contacto.
+     * @param usuario     Nombre de usuario exclusivo para el acceso al sistema.
+     * @param passPlana   Contraseña original en texto plano que será encriptada.
+     * @return El objeto {@link Anfitrion} creado con su credencial ya encriptada y persistida de forma exitosa.
+     * @throws AutenticacionException Si ocurre un conflicto de unicidad en la base de datos o ante fallos
+     * críticos en la transacción de guardado.
+     */
     public Anfitrion registrarAnfitrion(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) throws AutenticacionException {
         Anfitrion a = new Anfitrion();
         a.setNombre(nombre);
@@ -72,7 +103,6 @@ public class UsuarioServicio {
         a.setEmail(email);
         a.setTelefono(telefono);
         a.setUsuario(usuario);
-
 
         String hashEncriptado = BCrypt.hashpw(passPlana, BCrypt.gensalt(12));
         a.setPass(hashEncriptado);
@@ -88,7 +118,20 @@ public class UsuarioServicio {
         }
     }
 
-    // REGISTRO Y ENCRIPTACIÓN HUÉSPED
+    /**
+     * Registra un nuevo Huésped en el sistema aplicando políticas de seguridad activa.
+     * Genera un hash Bcrypt con un factor de coste adaptativo (12 rounds de sal) para ocultar la
+     * contraseña en texto plano antes de persistir los datos de forma transaccional.
+     * * @param nombre      Nombre de pila del huésped.
+     * @param apellidos   Apellidos del huésped.
+     * @param email       Dirección de correo electrónico (debe ser única).
+     * @param telefono    Número telefónico de contacto.
+     * @param usuario     Nombre de usuario exclusivo para el acceso al sistema.
+     * @param passPlana   Contraseña original en texto plano que será encriptada.
+     * @return El objeto {@link Huesped} creado con su credencial ya encriptada y persistida de forma exitosa.
+     * @throws AutenticacionException Si ocurre un conflicto de unicidad en la base de datos o ante fallos
+     * críticos en la transacción de guardado.
+     */
     public Huesped registrarHuesped(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) throws AutenticacionException {
         Huesped h = new Huesped();
         h.setNombre(nombre);
@@ -96,7 +139,6 @@ public class UsuarioServicio {
         h.setEmail(email);
         h.setTelefono(telefono);
         h.setUsuario(usuario);
-
 
         String hashEncriptado = BCrypt.hashpw(passPlana, BCrypt.gensalt(12));
         h.setPass(hashEncriptado);

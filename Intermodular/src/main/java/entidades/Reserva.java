@@ -4,18 +4,32 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Entidad que representa una Reserva en el sistema Roomly.
+ * Vincula a un huésped con un alojamiento concreto para un rango de fechas determinado,
+ * registrando el importe total de la estancia, mapeado con la tabla 'reservas'.
+ */
 @Entity
 @Table(name = "reservas")
 public class Reserva {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reserva", nullable = false)
     private Integer idReserva;
 
+    /**
+     * Alojamiento que ha sido reservado.
+     * Establece una relación de muchos a uno con la entidad Alojamiento.
+     */
     @ManyToOne
     @JoinColumn(name = "id_alojamiento", nullable = false)
     private Alojamiento alojamiento;
 
+    /**
+     * Huésped que realiza y es titular de la reserva.
+     * Establece una relación de muchos a uno con la entidad Huesped.
+     */
     @ManyToOne
     @JoinColumn(name = "id_huesped", nullable = false)
     private Huesped huesped;
@@ -29,7 +43,6 @@ public class Reserva {
     @Column(name = "precio_total", nullable = false)
     private BigDecimal precioTotal;
 
-    // Getters y Setters
     public Integer getIdReserva() { return idReserva; }
     public void setIdReserva(Integer idReserva) { this.idReserva = idReserva; }
 
