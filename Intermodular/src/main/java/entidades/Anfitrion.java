@@ -2,9 +2,15 @@ package entidades;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa a un Anfitrión en el sistema Roomly.
+ * Almacena los datos personales, de contacto y credenciales de acceso de los usuarios
+ * propietarios que publican y gestionan alojamientos, mapeados con la tabla 'anfitriones'.
+ */
 @Entity
 @Table(name = "anfitriones")
 public class Anfitrion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_anfitrion", nullable = false)
@@ -28,7 +34,6 @@ public class Anfitrion {
     @Column(name = "pass", nullable = false, length = 60)
     private String pass;
 
-    // Getters y Setters
     public Integer getIdAnfitrion() { return idAnfitrion; }
     public void setIdAnfitrion(Integer idAnfitrion) { this.idAnfitrion = idAnfitrion; }
 

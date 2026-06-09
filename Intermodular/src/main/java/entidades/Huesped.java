@@ -2,9 +2,15 @@ package entidades;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa a un Huésped en el sistema Roomly.
+ * Almacena los datos personales, de contacto y credenciales de acceso de los usuarios
+ * clientes que realizan reservas de alojamientos, mapeados con la tabla 'huespedes'.
+ */
 @Entity
 @Table(name = "huespedes")
 public class Huesped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_huesped", nullable = false)
@@ -28,7 +34,6 @@ public class Huesped {
     @Column(name = "pass", nullable = false, length = 60)
     private String pass;
 
-    // Getters y Setters
     public Integer getIdHuesped() { return idHuesped; }
     public void setIdHuesped(Integer idHuesped) { this.idHuesped = idHuesped; }
 
