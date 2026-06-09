@@ -46,7 +46,7 @@
 
         .brand h1 {
             font-size: 36px;
-            color: #FF385C; 
+            color: #1E3A8A; /* Azul Corporativo */
             font-weight: 800;
             letter-spacing: -1px;
         }
@@ -89,7 +89,7 @@
             width: 100%;
             padding: 16px;
             font-size: 16px;
-            background: #F7F7F7;
+            background: #F4F7F6;
             border: 2px solid transparent;
             border-radius: 12px;
             outline: none;
@@ -99,14 +99,14 @@
 
         .form-group input:focus {
             background: #ffffff;
-            border-color: #FF385C;
-            box-shadow: 0 0 0 4px rgba(213, 56, 92, 0.1);
+            border-color: #1E3A8A; /* Enfoque en Azul */
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
         }
 
         .btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(90deg, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+            background: linear-gradient(90deg, #10B981 0%, #059669 50%, #047857 100%); /* Gradiente Verde Vitalidad */
             color: white;
             border: none;
             border-radius: 12px;
@@ -114,12 +114,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 14px rgba(215, 4, 102, 0.3);
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(215, 4, 102, 0.4);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
         }
 
         .btn:active {
@@ -159,17 +159,17 @@
         }
 
         .switch-form a:hover {
-            color: #FF385C;
+            color: #059669; /* Enlace hover Verde */
         }
 
         /* --- LADO DERECHO: DETALLES VISUALES Y TEXTO --- */
         .visual-section {
             flex: 1.2;
-            background: linear-gradient(135deg, #FF5A5F 0%, #FF385C 50%, #BD1E51 100%);
+            background: linear-gradient(135deg, #0D9488 0%, #1E3A8A 50%, #0F172A 100%); /* Fondo degradado Océano/Azul profundo */
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Distribuye el texto arriba y las reseñas abajo */
+            justify-content: space-between;
             align-items: flex-start;
             padding: 60px 40px;
             overflow: hidden;
@@ -182,7 +182,7 @@
             z-index: 5;
             text-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 40px;
-            margin-top: auto; /* Empuja el contenido hacia el centro vertical idóneo */
+            margin-top: auto;
         }
 
         .visual-header-text h2 {
@@ -198,14 +198,14 @@
             line-height: 1.5;
         }
 
-        /* --- CONTENEDOR MARQUEE (CARRUSEL DE UNA FILA BUENA) --- */
+        /* --- CONTENEDOR MARQUEE --- */
         .reviews-marquee-wrapper {
             width: 100%;
             overflow: hidden;
             position: relative;
             z-index: 5;
             margin-top: auto;
-            margin-bottom: auto; /* Centrado perfecto del bloque inferior */
+            margin-bottom: auto;
         }
 
         .marquee-track {
@@ -229,7 +229,7 @@
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            width: 360px; /* Tamaño más robusto y visible */
+            width: 360px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             flex-shrink: 0;
@@ -238,7 +238,6 @@
             flex-direction: column;
         }
 
-        /* Imagen real del alojamiento ocupando la parte superior */
         .room-photo {
             width: 100%;
             height: 150px;
@@ -269,7 +268,7 @@
         }
 
         .review-stars {
-            color: #FFB100;
+            color: #059669; /* Estrellas Verdes */
             font-size: 13px;
         }
 
@@ -279,7 +278,7 @@
             color: #484848;
         }
 
-        /* --- CONTENEDOR GLOBAL DE ANIMACIÓN (EMOJIS FLOJOS) --- */
+        /* --- CONTENEDOR GLOBAL DE ANIMACIÓN (EMOJIS) --- */
         .emoji-container {
             position: fixed;
             top: 0;
@@ -318,7 +317,7 @@
             .emoji-container {
                 width: 100vw;
                 left: 0;
-                background: linear-gradient(135deg, #ff5a6015 0%, #ff385d20 100%);
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(30, 58, 138, 0.05) 100%);
                 z-index: 1;
             }
             .falling-emoji {
@@ -509,7 +508,7 @@
             document.getElementById('subtitle').textContent = 'Encuentra tu lugar perfecto';
         }
 
-        /* --- LÓGICA DE EMOJIS (Se mantiene de fondo) --- */
+        /* --- LÓGICA DE EMOJIS --- */
         const container = document.getElementById('emojiContainer');
         const emojis = ['🧳', '✈️', '🛌', '🏠'];
 
