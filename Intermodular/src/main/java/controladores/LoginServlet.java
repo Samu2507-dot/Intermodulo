@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * Servlet que actúa como puente entre el formulario HTML y la lógica de negocio.
  */
-@WebServlet("/Intermodular/src/main/java/controladores/LoginServlet.java") // Esta es la URL que buscará el formulario HTML
+@WebServlet("/LoginServlet") // Esta es la URL que buscará el formulario HTML
 public class LoginServlet extends HttpServlet {
 
     private UsuarioServicio usuarioServicio;
