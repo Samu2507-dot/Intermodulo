@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 
             // 4. Redirigir a la pantalla principal del sistema
             // (Cambia "dashboard.html" por el nombre real de tu página interior)
-            response.sendRedirect("dashboard.html");
+            response.sendRedirect("InterfazDentroUsuario.html");
 
         } catch (AutenticacionException e) {
             // 5. Login incorrecto: Volver al login enviando un parámetro de error por la URL
