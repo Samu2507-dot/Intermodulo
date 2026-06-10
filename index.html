@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* --- CONTENEDOR PRINCIPAL DIVIDIDO --- */
+  
         .login-container {
             display: flex;
             width: 100vw;
@@ -28,7 +28,7 @@
             position: relative;
         }
 
-        /* --- LADO IZQUIERDO: FORMULARIO CLEAN --- */
+
         .form-section {
             flex: 1;
             display: flex;
@@ -46,7 +46,7 @@
 
         .brand h1 {
             font-size: 36px;
-            color: #1E3A8A; /* Azul Corporativo */
+            color: #1E3A8A; 
             font-weight: 800;
             letter-spacing: -1px;
         }
@@ -101,6 +101,17 @@
             background: #ffffff;
             border-color: #1E3A8A; /* Enfoque en Azul */
             box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+        }
+
+        .error-banner {
+            background-color: #FEE2E2;
+            border: 1px solid #EF4444;
+            color: #991B1B;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
         }
 
         .btn {
@@ -344,16 +355,20 @@
                 <p id="subtitle">Encuentra tu lugar perfecto</p>
             </div>
 
+            <div class="error-banner" id="errorBanner">
+                ⚠️ El nombre de usuario o la contraseña no coinciden.
+            </div>
+
             <div id="loginForm" class="form-container active">
-                <form onsubmit="event.preventDefault();">
+                <form action="LoginServlet" method="POST">
                     <div class="form-group">
-                        <label>Correo electrónico</label>
-                        <input type="email" placeholder="nombre@ejemplo.com" required>
+                        <label>Nombre de Usuario</label>
+                        <input type="text" name="usuario" placeholder="Ingresa tu nombre de usuario" required>
                     </div>
 
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input type="password" placeholder="Ingresa tu contraseña" required>
+                        <input type="password" name="passPlana" placeholder="Ingresa tu contraseña" required>
                     </div>
 
                     <button type="submit" class="btn">Comenzar viaje</button>
@@ -367,20 +382,35 @@
             </div>
 
             <div id="registerForm" class="form-container">
-                <form onsubmit="event.preventDefault();">
+                <form action="RegistroServlet" method="POST">
                     <div class="form-group">
-                        <label>Nombre completo</label>
-                        <input type="text" placeholder="Tu nombre y apellido" required>
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apellidos</label>
+                        <input type="text" name="apellidos" placeholder="Tus apellidos" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" name="usuario" placeholder="Nombre de usuario único" required>
                     </div>
 
                     <div class="form-group">
                         <label>Correo electrónico</label>
-                        <input type="email" placeholder="nombre@ejemplo.com" required>
+                        <input type="email" name="email" placeholder="nombre@ejemplo.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" name="telefono" placeholder="Número de contacto" required>
                     </div>
 
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input type="password" placeholder="Mínimo 6 caracteres" required>
+                        <input type="password" name="passPlana" placeholder="Mínimo 6 caracteres" required>
                     </div>
 
                     <button type="submit" class="btn">Registrarse</button>
@@ -496,6 +526,13 @@
     </div>
 
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'true') {
+                document.getElementById('errorBanner').style.display = 'block';
+            }
+        });
+
         function showRegister() {
             document.getElementById('loginForm').classList.remove('active');
             document.getElementById('registerForm').classList.add('active');

@@ -20,7 +20,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            // Se conecta automáticamente usando el nombre "RoomlyPU" que configuramos
             EntityManager em = Persistence.createEntityManagerFactory("RoomlyPU").createEntityManager();
             this.usuarioServicio = new UsuarioServicio(em);
         } catch (Exception e) {
@@ -40,7 +39,7 @@ public class LoginServlet extends HttpServlet {
             // 2. Llamar a tu servicio (el que busca en los 3 roles y comprueba BCrypt)
             Object usuarioAutenticado = usuarioServicio.login(txtUsuario, txtPass);
 
-            // 3. ¡Login correcto! Creamos la sesión web para que el navegador lo recuerde
+            // 3. Login correcto
             HttpSession session = request.getSession();
             session.setAttribute("usuarioLogueado", usuarioAutenticado);
 
