@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (AutenticacionException e) {
             // 5. Login incorrecto: Volver al login enviando un parámetro de error por la URL
-            response.sendRedirect("login.html?error=true");
+            response.sendRedirect("error404.html?error=true");
         }
     }
 }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roomly - Página no encontrada (404)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #0D9488 0%, #1E3A8A 50%, #0F172A 100%); /* Degradado Océano de Roomly */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            overflow: hidden;
+            padding: 24px;
+        }
+
+        .error-container {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 50px 40px;
+            border-radius: 24px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            z-index: 10;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-error {
+            color: #1E3A8A;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+
+        .error-code {
+            font-size: 110px;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(90deg, #10B981 0%, #059669 100%); /* Verde Vitalidad */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .error-title {
+            color: #222222;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .error-message {
+            color: #717171;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 35px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #10B981 0%, #059669 50%, #047857 100%); /* Gradiente de tus botones */
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-home:active {
+            transform: translateY(0);
+        }
+
+        /* --- CONTENEDOR GLOBAL DE ANIMACIÓN (EMOJIS) --- */
+        .emoji-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .falling-emoji {
+            position: absolute;
+            top: -100px;
+            user-select: none;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
+            animation: fallAndFade linear forwards;
+            opacity: 0.25;
+        }
+
+        @keyframes fallAndFade {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.25; }
+            85% { opacity: 0.25; }
+            100% { transform: translateY(115vh) rotate(360deg) scale(1.1); opacity: 0; }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 480px) {
+            .error-container {
+                padding: 40px 24px;
+            }
+            .error-code {
+                font-size: 90px;
+            }
+            .error-title {
+                font-size: 20px;
+            }
+            .error-message {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="emoji-container" id="emojiContainer"></div>
+
+    <div class="error-container">
+        <div class="brand-error">Roomly</div>
+        
+        <div class="error-code">404</div>
+        
+        <h2 class="error-title">Parece que te has desviado de la ruta</h2>
+        
+        <p class="error-message">
+            El lugar que estás buscando no existe, ha cambiado de dirección o se encuentra temporalmente fuera de nuestro mapa de estancias.
+        </p>
+
+        <a href="index.html" class="btn-home">Volver al inicio</a>
+    </div>
+
+    <script>
+        /* --- LÓGICA DE EMOJIS ADAPTADA A LA PÉRDIDA/BÚSQUEDA --- */
+        const container = document.getElementById('emojiContainer');
+        const emojis = ['🧭', '🗺️', '✈️', '🔍', '📍'];
+
+        function createEmoji() {
+            const emojiEl = document.createElement('div');
+            emojiEl.classList.add('falling-emoji');
+            
+            emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emojiEl.style.left = Math.random() * 100 + '%';
+            
+            const duration = Math.random() * 4 + 6; // Entre 6 y 10 segundos
+            emojiEl.style.animationDuration = duration + 's';
+            
+            emojiEl.style.fontSize = Math.random() * 25 + 35 + 'px'; // Tamaño variado
+
+            container.appendChild(emojiEl);
+
+            // Eliminar del DOM tras terminar la animación
+            setTimeout(() => {
+                emojiEl.remove();
+            }, duration * 1000);
+        }
+
+        // Generar un emoji cada 600ms para no saturar la pantalla de error
+        setInterval(createEmoji, 600);
+    </script>
+</body>
+</html>
