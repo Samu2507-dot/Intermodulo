@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vistas.PanelHuespedController">
+    <left>
+        <VBox prefWidth="200" spacing="10" style="-fx-background-color: #1E3A8A; -fx-padding: 20;">
+            <Label text="Roomly" textFill="WHITE" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+            <Button text="Explorar" onAction="#cargarExplorar" maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="Mis Reservas" onAction="#cargarReservas" maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contenido" style="-fx-padding: 20;">
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                <FlowPane fx:id="gridAlojamientos" hgap="20" vgap="20" />
+            </ScrollPane>
+        </StackPane>
+    </center>
+</BorderPane>
