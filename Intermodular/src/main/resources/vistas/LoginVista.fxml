@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.LoginController">
+    <children>
+        <TextField fx:id="txtUsuario" layoutX="226.0" layoutY="144.0" promptText="Usuario" />
+        <PasswordField fx:id="txtPassPlana" layoutX="226.0" layoutY="188.0" promptText="Contraseña" />
+        <Button layoutX="268.0" layoutY="238.0" mnemonicParsing="false" onAction="#procesarLogin" text="Entrar" />
+        <Label fx:id="lblError" alignment="CENTER" layoutX="50.0" layoutY="294.0" prefHeight="17.0" prefWidth="500.0" text="" textFill="RED" />
+        <Label layoutX="220.0" layoutY="66.0" text="Roomly Desktop">
+            <font>
+                <Font name="System Bold" size="22.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
