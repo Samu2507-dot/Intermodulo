@@ -17,8 +17,7 @@ import java.io.IOException;
 
 public class LoginController {
     @FXML private ComboBox<String> regRol;
-    @FXML private VBox panelLogin;
-    @FXML private VBox panelRegistro;
+    @FXML private VBox panelLogin, panelRegistro;
     @FXML private TextField txtUsuario, regNombre, regApellidos, regUsuario, regEmail, regTelefono;
     @FXML private PasswordField txtPassPlana, regPass;
     @FXML private Label lblError;
@@ -28,10 +27,6 @@ public class LoginController {
     @FXML
     public void initialize() {
         this.usuarioServicio = new UsuarioServicio(JPAUtil.getEntityManager());
-        // Llenamos el ComboBox si no lo hiciste en el FXML
-        if (regRol != null) {
-            regRol.getItems().addAll("Huésped", "Anfitrión", "Mantenimiento");
-        }
     }
 
     @FXML private void mostrarRegistro() { panelLogin.setVisible(false); panelRegistro.setVisible(true); lblError.setText(""); }
@@ -47,27 +42,14 @@ public class LoginController {
         }
 
         try {
-            // Delegamos al servicio según el rol seleccionado
             switch (rol) {
-                case "Huésped":
-                    usuarioServicio.registrarHuesped(regNombre.getText(), regApellidos.getText(), regEmail.getText(), regTelefono.getText(), regUsuario.getText(), regPass.getText());
-                    break;
-                case "Anfitrión":
-                    usuarioServicio.registrarAnfitrion(regNombre.getText(), regApellidos.getText(), regEmail.getText(), regTelefono.getText(), regUsuario.getText(), regPass.getText());
-                    break;
-                case "Mantenimiento":
-                    usuarioServicio.registrarOperario(
-                            regNombre.getText(),
-                            regUsuario.getText(),
-                            regPass.getText()
-                    );
-                    break;
+                case "Huésped" -> usuarioServicio.registrarHuesped(regNombre.getText(), regApellidos.getText(), regEmail.getText(), regTelefono.getText(), regUsuario.getText(), regPass.getText());
+                case "Anfitrión" -> usuarioServicio.registrarAnfitrion(regNombre.getText(), regApellidos.getText(), regEmail.getText(), regTelefono.getText(), regUsuario.getText(), regPass.getText());
+                case "Mantenimiento" -> usuarioServicio.registrarOperario(regNombre.getText(), regUsuario.getText(), regPass.getText());
             }
-
             lblError.setStyle("-fx-text-fill: green;");
-            lblError.setText("¡Cuenta creada! Ya puedes iniciar sesión.");
+            lblError.setText("¡Cuenta creada! Inicia sesión.");
             mostrarLogin();
-
         } catch (Exception e) {
             lblError.setStyle("-fx-text-fill: red;");
             lblError.setText("Error: " + e.getMessage());
@@ -84,22 +66,37 @@ public class LoginController {
             lblError.setText(e.getMessage());
         }
     }
-
     private void cargarInterfazPorRol(Object usuario) {
-        String fxmlRuta = "";
-        if (usuario instanceof Huesped) fxmlRuta = "/vista/PanelHuesped.fxml";
-        else if (usuario instanceof Anfitrion) fxmlRuta = "/vista/PanelAnfitrion.fxml";
-        else if (usuario instanceof OperarioMantenimiento) fxmlRuta = "/vista/PanelMantenimiento.fxml";
+        String fxmlRuta = null;
+
+        if (usuario instanceof Huesped) fxmlRuta = "/vistas/PanelHuesped.fxml";
+        else if (usuario instanceof Anfitrion) fxmlRuta = "/vistas/PanelAnfitrion.fxml";
+        else if (usuario instanceof OperarioMantenimiento) fxmlRuta = "/vistas/PanelMantenimiento.fxml";
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlRuta));
+            if (fxmlRuta == null) throw new IOException("Rol no reconocido: " + usuario.getClass().getName());
+
+            // DEPURACIÓN: Comprobamos si el recurso existe antes de intentar cargarlo
+            java.net.URL url = getClass().getResource(fxmlRuta);
+            System.out.println("DEBUG: Buscando archivo en -> " + fxmlRuta);
+            System.out.println("DEBUG: ¿URL encontrada? -> " + (url != null));
+
+            if (url == null) {
+                throw new IOException("Archivo FXML no encontrado en el classpath: " + fxmlRuta);
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
+
             Stage stage = (Stage) txtUsuario.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-        } catch (IOException e) {
-            lblError.setText("Error al cargar la interfaz.");
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            lblError.setStyle("-fx-text-fill: red;");
+            lblError.setText("Error al cargar pantalla: " + e.getMessage());
+            e.printStackTrace(); // Esto mostrará el error real en tu consola
         }
     }
+
 }

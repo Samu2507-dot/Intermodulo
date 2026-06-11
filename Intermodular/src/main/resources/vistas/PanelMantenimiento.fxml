@@ -5,7 +5,7 @@
 <BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelMantenimientoController">
     <center>
         <VBox spacing="20" style="-fx-padding: 40;">
-            
+
             <Label text="Incidencias Asignadas" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
             <TableView fx:id="tablaTareas" VBox.vgrow="ALWAYS" styleClass="table-view">
                 <columns>
