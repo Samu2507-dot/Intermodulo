@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-background-color: #F4F7F6;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelHuespedController">
+<BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelHuespedController">
     <top>
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 15 40; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
             <Label text="Roomly" style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: #1E3A8A;"/>
@@ -11,18 +11,19 @@
         </HBox>
     </top>
     <center>
-        <VBox spacing="20" style="-fx-padding: 40;">
-            <HBox style="-fx-background-color: #ffffff; -fx-padding: 12; -fx-background-radius: 32; -fx-border-color: #E5E7EB; -fx-border-radius: 32;">
-                <TextField fx:id="txtDestino" promptText="¿A dónde quieres ir?" style="-fx-background-color: transparent;"/>
+        <VBox spacing="20" style="-fx-padding: 40 100 40 100;">
+            <Label fx:id="lblMensaje" />
+            <HBox alignment="CENTER" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 32; -fx-border-color: #E5E7EB; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+                <TextField fx:id="txtDestino" promptText="¿A dónde quieres ir?" styleClass="text-field" HBox.hgrow="ALWAYS"/>
                 <DatePicker fx:id="dateInicio" promptText="Llegada" />
-                <Button text="Buscar" style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-background-radius: 24;"/>
+                <Button text="Buscar" styleClass="button-primary"/>
             </HBox>
 
-            <Label text="Tus reservas actuales" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
-            <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS">
+            <Label text="Tus reservas actuales" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #111827;"/>
+            <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS" styleClass="table-view">
                 <columns>
-                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="250" />
-                    <TableColumn fx:id="colFechas" text="Fecha" prefWidth="200" />
+                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="300" />
+                    <TableColumn fx:id="colFechas" text="Fecha Entrada" prefWidth="200" />
                 </columns>
             </TableView>
         </VBox>

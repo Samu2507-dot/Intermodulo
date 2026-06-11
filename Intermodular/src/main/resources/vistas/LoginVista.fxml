@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -10,6 +11,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <HBox fx:id="rootNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.LoginController">
     <children>
@@ -17,9 +20,9 @@
         <StackPane prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #ffffff;">
             <children>
 
-                <VBox fx:id="panelRegistro" alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="450.0" spacing="15.0" style="-fx-background-color: #ffffff;" visible="false">
+                <VBox fx:id="panelRegistro" alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="450.0" spacing="12.0" style="-fx-background-color: #ffffff;" visible="false">
                     <padding>
-                        <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+                        <Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
                     </padding>
                     <children>
                         <VBox spacing="2.0">
@@ -28,17 +31,31 @@
                                 <Label text="Crea tu cuenta en segundos" textFill="#717171"><font><Font size="14.0" /></font></Label>
                             </children>
                         </VBox>
-                        <VBox spacing="10.0">
+
+                        <VBox spacing="5.0">
+                            <Label text="TIPO DE CUENTA" textFill="#222222"><font><Font name="System Bold" size="11.0" /></font></Label>
+                            <ComboBox fx:id="regRol" promptText="Selecciona tu perfil" maxWidth="1.7976931348623157E308" prefHeight="38.0" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Huésped" />
+                                        <String fx:value="Anfitrión" />
+                                        <String fx:value="Mantenimiento" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+
+                        <VBox spacing="8.0">
                             <children>
-                                <TextField fx:id="regNombre" prefHeight="38.0" promptText="Nombre" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
-                                <TextField fx:id="regApellidos" prefHeight="38.0" promptText="Apellidos" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
-                                <TextField fx:id="regUsuario" prefHeight="38.0" promptText="Nombre de usuario único" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
-                                <TextField fx:id="regEmail" prefHeight="38.0" promptText="correo@ejemplo.com" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
-                                <TextField fx:id="regTelefono" prefHeight="38.0" promptText="Teléfono de contacto" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
-                                <PasswordField fx:id="regPass" prefHeight="38.0" promptText="Contraseña (mínimo 6 caracteres)" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regNombre" prefHeight="35.0" promptText="Nombre" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regApellidos" prefHeight="35.0" promptText="Apellidos" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regUsuario" prefHeight="35.0" promptText="Nombre de usuario único" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regEmail" prefHeight="35.0" promptText="correo@ejemplo.com" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regTelefono" prefHeight="35.0" promptText="Teléfono de contacto" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <PasswordField fx:id="regPass" prefHeight="35.0" promptText="Contraseña (mínimo 6 caracteres)" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
                             </children>
                         </VBox>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#procesarRegistro" prefHeight="42.0" style="-fx-background-color: linear-gradient(to right, #10B981, #059669); -fx-background-radius: 10; -fx-cursor: hand;" text="Registrarse" textFill="WHITE"><font><Font name="System Bold" size="14.0" /></font></Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#procesarRegistro" prefHeight="40.0" style="-fx-background-color: linear-gradient(to right, #10B981, #059669); -fx-background-radius: 10; -fx-cursor: hand;" text="Registrarse" textFill="WHITE"><font><Font name="System Bold" size="14.0" /></font></Button>
                         <VBox alignment="CENTER" spacing="5.0">
                             <children>
                                 <Label text="o" textFill="#b0b0b0" />

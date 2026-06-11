@@ -153,4 +153,27 @@ public class UsuarioServicio {
             throw new AutenticacionException("No se pudo registrar el huésped en la base de datos", e);
         }
     }
+
+    /**
+     * Registra un nuevo Operario de Mantenimiento en el sistema.
+     * Basado en la entidad OperarioMantenimiento que solo requiere nombre y usuario.
+     */
+    public OperarioMantenimiento registrarOperario(String nombre, String usuario, String passPlana) throws AutenticacionException {
+        OperarioMantenimiento o = new OperarioMantenimiento();
+        o.setNombre(nombre);
+        o.setUsuario(usuario);
+
+        String hashEncriptado = BCrypt.hashpw(passPlana, BCrypt.gensalt(12));
+        o.setPass(hashEncriptado);
+
+        em.getTransaction().begin();
+        try {
+            em.persist(o);
+            em.getTransaction().commit();
+            return o;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new AutenticacionException("Error al registrar el operario en la base de datos.", e);
+        }
+    }
 }
