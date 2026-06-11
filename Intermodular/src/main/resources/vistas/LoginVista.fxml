@@ -1,22 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.LoginController">
+<HBox fx:id="rootNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.LoginController">
     <children>
-        <TextField fx:id="txtUsuario" layoutX="226.0" layoutY="144.0" promptText="Usuario" />
-        <PasswordField fx:id="txtPassPlana" layoutX="226.0" layoutY="188.0" promptText="Contraseña" />
-        <Button layoutX="268.0" layoutY="238.0" mnemonicParsing="false" onAction="#procesarLogin" text="Entrar" />
-        <Label fx:id="lblError" alignment="CENTER" layoutX="50.0" layoutY="294.0" prefHeight="17.0" prefWidth="500.0" text="" textFill="RED" />
-        <Label layoutX="220.0" layoutY="66.0" text="Roomly Desktop">
-            <font>
-                <Font name="System Bold" size="22.0" />
-            </font>
-        </Label>
+
+        <StackPane prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #ffffff;">
+            <children>
+
+                <VBox fx:id="panelRegistro" alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="450.0" spacing="15.0" style="-fx-background-color: #ffffff;" visible="false">
+                    <padding>
+                        <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+                    </padding>
+                    <children>
+                        <VBox spacing="2.0">
+                            <children>
+                                <Label text="Roomly" textFill="#1e3a8a"><font><Font name="System Bold" size="32.0" /></font></Label>
+                                <Label text="Crea tu cuenta en segundos" textFill="#717171"><font><Font size="14.0" /></font></Label>
+                            </children>
+                        </VBox>
+                        <VBox spacing="10.0">
+                            <children>
+                                <TextField fx:id="regNombre" prefHeight="38.0" promptText="Nombre" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regApellidos" prefHeight="38.0" promptText="Apellidos" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regUsuario" prefHeight="38.0" promptText="Nombre de usuario único" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regEmail" prefHeight="38.0" promptText="correo@ejemplo.com" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <TextField fx:id="regTelefono" prefHeight="38.0" promptText="Teléfono de contacto" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                                <PasswordField fx:id="regPass" prefHeight="38.0" promptText="Contraseña (mínimo 6 caracteres)" style="-fx-background-color: #F4F7F6; -fx-background-radius: 10;" />
+                            </children>
+                        </VBox>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#procesarRegistro" prefHeight="42.0" style="-fx-background-color: linear-gradient(to right, #10B981, #059669); -fx-background-radius: 10; -fx-cursor: hand;" text="Registrarse" textFill="WHITE"><font><Font name="System Bold" size="14.0" /></font></Button>
+                        <VBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label text="o" textFill="#b0b0b0" />
+                                <Hyperlink onAction="#mostrarLogin" text="¿Ya tienes cuenta? Inicia sesión" textFill="#222222" underline="true"><font><Font name="System Bold" size="13.0" /></font></Hyperlink>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="panelLogin" alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: #ffffff;">
+                    <padding>
+                        <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+                    </padding>
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Roomly" textFill="#1e3a8a"><font><Font name="System Bold" size="36.0" /></font></Label>
+                                <Label text="Encuentra tu lugar perfecto" textFill="#717171"><font><Font size="14.0" /></font></Label>
+                            </children>
+                        </VBox>
+                        <VBox spacing="15.0">
+                            <children>
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label text="NOMBRE DE USUARIO" textFill="#222222"><font><Font name="System Bold" size="11.0" /></font></Label>
+                                        <TextField fx:id="txtUsuario" prefHeight="45.0" promptText="Ingresa tu nombre de usuario" style="-fx-background-color: #F4F7F6; -fx-background-radius: 12;" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label text="CONTRASEÑA" textFill="#222222"><font><Font name="System Bold" size="11.0" /></font></Label>
+                                        <PasswordField fx:id="txtPassPlana" prefHeight="45.0" promptText="Ingresa tu contraseña" style="-fx-background-color: #F4F7F6; -fx-background-radius: 12;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                        <Label fx:id="lblError" alignment="CENTER" maxWidth="1.7976931348623157E308" text="" textFill="#ef4444"><font><Font size="13.0" /></font></Label>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#procesarLogin" prefHeight="45.0" style="-fx-background-color: linear-gradient(to right, #10B981, #059669); -fx-background-radius: 12; -fx-cursor: hand;" text="Comenzar viaje" textFill="WHITE"><font><Font name="System Bold" size="14.0" /></font></Button>
+                        <VBox alignment="CENTER" spacing="10.0">
+                            <children>
+                                <Label text="o" textFill="#b0b0b0" />
+                                <Hyperlink onAction="#mostrarRegistro" text="¿Eres nuevo en Roomly? Crea una cuenta" textFill="#222222" underline="true"><font><Font name="System Bold" size="13.0" /></font></Hyperlink>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+            </children>
+        </StackPane>
+
+        <VBox alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="450.0" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom right, #0D9488, #1E3A8A, #0F172A);" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="60.0" left="50.0" right="50.0" top="60.0" />
+            </padding>
+            <children>
+                <Label text="Espacios que inspiran tus mejores historias." textFill="WHITE" wrapText="true"><font><Font name="System Bold" size="32.0" /></font></Label>
+                <Label text="Únete a miles de viajeros que ya han descubierto habitaciones perfectas, estancias verificadas y experiencias inolvidables alrededor del mundo." textFill="WHITE" opacity="0.9" wrapText="true"><font><Font size="16.0" /></font></Label>
+            </children>
+        </VBox>
+
     </children>
-</AnchorPane>
+</HBox>

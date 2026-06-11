@@ -22,7 +22,7 @@
 
             <property name="jakarta.persistence.jdbc.user" value="root"/>
 
-            <property name="jakarta.persistence.jdbc.password" value="ocultada_por_seguridad"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
 

@@ -18,7 +18,7 @@ public class JPAUtil {
 
             propiedades.put("jakarta.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/gestion_alojamientos_ROOMLY_");
             propiedades.put("jakarta.persistence.jdbc.user", "root");
-            propiedades.put("jakarta.persistence.jdbc.password", "ocultada_por_seguridad");
+            propiedades.put("jakarta.persistence.jdbc.password", "1234");
             propiedades.put("jakarta.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
 
 
