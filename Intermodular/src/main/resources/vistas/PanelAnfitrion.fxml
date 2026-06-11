@@ -7,15 +7,24 @@
         <VBox spacing="20" style="-fx-padding: 40;">
             <Label fx:id="lblMensaje" />
             <Label text="Publicar nuevo alojamiento" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+
             <GridPane hgap="10" vgap="10">
                 <TextField fx:id="txtNombre" promptText="Nombre del alojamiento" GridPane.columnIndex="0" styleClass="text-field"/>
                 <TextField fx:id="txtDireccion" promptText="Dirección" GridPane.columnIndex="1" styleClass="text-field"/>
                 <TextField fx:id="txtPrecio" promptText="Precio por día" GridPane.columnIndex="2" styleClass="text-field"/>
             </GridPane>
+
             <Button text="Publicar en Roomly" onAction="#handlePublicar" styleClass="button-primary"/>
 
             <Label text="Mis Alojamientos" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-            <TableView fx:id="tablaReservasRecibidas" VBox.vgrow="ALWAYS" styleClass="table-view" />
+
+            <TableView fx:id="tablaReservasRecibidas" VBox.vgrow="ALWAYS" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="150" />
+                    <TableColumn fx:id="colHuesped" text="Huésped" prefWidth="150" />
+                    <TableColumn fx:id="colEntrada" text="Fecha Entrada" prefWidth="150" />
+                </columns>
+            </TableView>
         </VBox>
     </center>
 </BorderPane>
