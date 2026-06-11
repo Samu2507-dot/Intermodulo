@@ -77,5 +77,30 @@
 
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
 
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <name>RoomlyDesktop</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>PaulaCompany</vendor>
+                    <mainClass>tu.paquete.MainApp</mainClass> <winDirChooser>true</winDirChooser>
+                    <winShortcut>true</winShortcut>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
