@@ -6,72 +6,60 @@ import utilidades.JPAUtil;
 import excepciones.AutenticacionException;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.event.ActionEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 public class LoginController {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    @FXML
-    private TextField txtUsuario;
-
-    @FXML
-    private PasswordField txtPassPlana;
-
-    @FXML
-    private Label lblError;
+    @FXML private VBox panelLogin;
+    @FXML private VBox panelRegistro;
+    @FXML private TextField txtUsuario, regNombre, regApellidos, regUsuario, regEmail, regTelefono;
+    @FXML private PasswordField txtPassPlana, regPass;
+    @FXML private Label lblError;
 
     private UsuarioServicio usuarioServicio;
 
     @FXML
     public void initialize() {
-        // Inicializamos tu servicio pasándole el EntityManager de tu proyecto
         this.usuarioServicio = new UsuarioServicio(JPAUtil.getEntityManager());
-        lblError.setText("");
     }
 
+    // --- NAVEGACIÓN ---
+    @FXML private void mostrarRegistro() { panelLogin.setVisible(false); panelRegistro.setVisible(true); }
+    @FXML private void mostrarLogin() { panelRegistro.setVisible(false); panelLogin.setVisible(true); }
+
+    // --- LOGIN ---
     @FXML
-    private void procesarLogin(ActionEvent event) {
-        String usuario = txtUsuario.getText().trim();
-        String pass = txtPassPlana.getText();
-
-        if (usuario.isEmpty() || pass.isEmpty()) {
-            lblError.setStyle("-fx-text-fill: red;");
-            lblError.setText("Por favor, rellena todos los campos.");
-            return;
-        }
-
+    private void procesarLogin() {
         try {
-            log.info("Intentando autenticar al usuario: {}", usuario);
-            Object usuarioLogueado = usuarioServicio.login(usuario, pass);
+            Object user = usuarioServicio.login(txtUsuario.getText(), txtPassPlana.getText());
+            lblError.setStyle("-fx-text-fill: green;");
+            lblError.setText("¡Bienvenido!");
+            // AQUÍ LLAMARÍAS A LA SIGUIENTE PANTALLA
+        } catch (AutenticacionException e) {
+            lblError.setStyle("-fx-text-fill: red;");
+            lblError.setText(e.getMessage());
+        }
+    }
+
+    // --- REGISTRO (CONECTADO A TU SERVICIO) ---
+    @FXML
+    private void procesarRegistro() {
+        try {
+            // Decidimos registrar como Huésped por defecto, o podrías añadir un ComboBox en el FXML
+            usuarioServicio.registrarHuesped(
+                    regNombre.getText(), regApellidos.getText(), regEmail.getText(),
+                    regTelefono.getText(), regUsuario.getText(), regPass.getText()
+            );
 
             lblError.setStyle("-fx-text-fill: green;");
-            lblError.setText("¡Bienvenido/a! Redirigiendo...");
-
-            // Aquí es donde tu servicio nos dice qué tipo de usuario es
-            if (usuarioLogueado instanceof Anfitrion) {
-                Anfitrion anfi = (Anfitrion) usuarioLogueado;
-                log.info("✅ [LOGIN OK] Rol: Anfitrión | Usuario: {}", anfi.getUsuario());
-            } else if (usuarioLogueado instanceof Huesped) {
-                Huesped huesped = (Huesped) usuarioLogueado;
-                log.info("✅ [LOGIN OK] Rol: Huésped | Usuario: {}", huesped.getUsuario());
-            } else if (usuarioLogueado instanceof OperarioMantenimiento) {
-                OperarioMantenimiento ope = (OperarioMantenimiento) usuarioLogueado;
-                log.info("✅ [LOGIN OK] Rol: Operario | Usuario: {}", ope.getUsuario());
-            }
+            lblError.setText("Cuenta creada. Ya puedes iniciar sesión.");
+            mostrarLogin();
 
         } catch (AutenticacionException e) {
-            log.warn("🚨 Login fallido para '{}': {}", usuario, e.getMessage());
             lblError.setStyle("-fx-text-fill: red;");
-            lblError.setText(e.getMessage()); // Tu mensaje de la excepción
-        } catch (Exception e) {
-            log.error("💥 Error imprevisto en el Login: ", e);
-            lblError.setText("Error interno del sistema.");
+            lblError.setText("Error: " + e.getMessage());
         }
     }
 }
