@@ -32,19 +32,19 @@ public class Principal {
 
             log.info("👤 Registrando nuevo Anfitrión...");
             Anfitrion a1 = usuarioServ.registrarAnfitrion(
-                    "Juan",
+                    "Alba",
                     "Rodriguez Fernandez",
-                    "juana1@gmail.com",
+                    "alba1@gmail.com",
                     "666111777",
-                    "juan_21",
-                    "juan_password_plana"
+                    "albiita_21",
+                    "alba_password_plana"
             );
             log.info("🔹 Anfitrión creado con ID: {}", a1.getIdAnfitrion());
 
             log.info("🏠 Publicando nuevo alojamiento para el Anfitrión ID: {}", a1.getIdAnfitrion());
             Alojamiento al1 = anfitrionServ.publicarAlojamiento(
                     a1.getIdAnfitrion(),
-                    "Apartamento Centro Sol",
+                    "Apartamento esquina Fernandez",
                     "Calle Mayor 14, Madrid",
                     new BigDecimal("85.00")
             );
