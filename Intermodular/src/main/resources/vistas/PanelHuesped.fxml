@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vistas.PanelHuespedController">
-    <left>
-        <VBox prefWidth="200" spacing="10" style="-fx-background-color: #1E3A8A; -fx-padding: 20;">
-            <Label text="Roomly" textFill="WHITE" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
-            <Button text="Explorar" onAction="#cargarExplorar" maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-            <Button text="Mis Reservas" onAction="#cargarReservas" maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-        </VBox>
-    </left>
-
+<BorderPane style="-fx-background-color: #F4F7F6;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelHuespedController">
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 15 40; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
+            <Label text="Roomly" style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: #1E3A8A;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Mis Reservas" styleClass="nav-btn"/>
+        </HBox>
+    </top>
     <center>
-        <StackPane fx:id="contenido" style="-fx-padding: 20;">
-            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                <FlowPane fx:id="gridAlojamientos" hgap="20" vgap="20" />
-            </ScrollPane>
-        </StackPane>
+        <VBox spacing="20" style="-fx-padding: 40;">
+            <HBox style="-fx-background-color: #ffffff; -fx-padding: 12; -fx-background-radius: 32; -fx-border-color: #E5E7EB; -fx-border-radius: 32;">
+                <TextField fx:id="txtDestino" promptText="¿A dónde quieres ir?" style="-fx-background-color: transparent;"/>
+                <DatePicker fx:id="dateInicio" promptText="Llegada" />
+                <Button text="Buscar" style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-background-radius: 24;"/>
+            </HBox>
+
+            <Label text="Tus reservas actuales" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+            <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="250" />
+                    <TableColumn fx:id="colFechas" text="Fecha" prefWidth="200" />
+                </columns>
+            </TableView>
+        </VBox>
     </center>
 </BorderPane>
