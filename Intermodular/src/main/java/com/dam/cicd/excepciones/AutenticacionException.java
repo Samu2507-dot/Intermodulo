@@ -1,4 +1,4 @@
-package excepciones;
+package com.dam.cicd.excepciones;
 
 public class AutenticacionException extends Exception{
 

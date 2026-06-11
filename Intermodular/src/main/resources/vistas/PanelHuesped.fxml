@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelHuespedController">
+<BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dam.cicd.controladores.PanelHuespedController">
     <top>
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 15 40; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
             <Label text="Roomly" style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: #1E3A8A;"/>

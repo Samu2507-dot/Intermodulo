@@ -1,4 +1,4 @@
-package utilidades;
+package com.dam.cicd.utilidades;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

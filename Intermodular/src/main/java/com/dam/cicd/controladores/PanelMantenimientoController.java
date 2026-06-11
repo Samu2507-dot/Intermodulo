@@ -1,12 +1,13 @@
-package controladores;
+package com.dam.cicd.controladores;
 
-import entidades.*;
+import com.dam.cicd.entidades.Mantenimiento;
+import com.dam.cicd.entidades.OperarioMantenimiento;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import servicios.MantenimientoServicio;
-import utilidades.JPAUtil;
+import com.dam.cicd.servicios.MantenimientoServicio;
+import com.dam.cicd.utilidades.JPAUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;

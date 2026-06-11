@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.PanelMantenimientoController">
+<BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dam.cicd.controladores.PanelMantenimientoController">
     <center>
         <VBox spacing="20" style="-fx-padding: 40;">
 

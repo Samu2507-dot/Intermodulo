@@ -1,9 +1,11 @@
+package com.dam.cicd;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utilidades.JPAUtil;
+import com.dam.cicd.utilidades.JPAUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

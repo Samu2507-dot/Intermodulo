@@ -7,13 +7,13 @@
     <persistence-unit name="RoomlyPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>entidades.Anfitrion</class>
-        <class>entidades.Alojamiento</class>
-        <class>entidades.Huesped</class>
-        <class>entidades.Reserva</class>
-        <class>entidades.OperarioMantenimiento</class>
-        <class>entidades.Mantenimiento</class>
-        <class>entidades.Resena</class>
+        <class>com.dam.cicd.entidades.Anfitrion</class>
+        <class>com.dam.cicd.entidades.Alojamiento</class>
+        <class>com.dam.cicd.entidades.Huesped</class>
+        <class>com.dam.cicd.entidades.Reserva</class>
+        <class>com.dam.cicd.entidades.OperarioMantenimiento</class>
+        <class>com.dam.cicd.entidades.Mantenimiento</class>
+        <class>com.dam.cicd.entidades.Resena</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>

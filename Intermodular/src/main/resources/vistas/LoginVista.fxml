@@ -14,7 +14,7 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
-<HBox fx:id="rootNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladores.LoginController">
+<HBox fx:id="rootNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dam.cicd.controladores.LoginController">
     <children>
 
         <StackPane prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #ffffff;">

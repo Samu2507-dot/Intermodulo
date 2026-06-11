@@ -1,7 +1,8 @@
-package servicios;
+package com.dam.cicd.servicios;
 
-import entidades.*;
-import excepciones.*;
+import com.dam.cicd.entidades.Alojamiento;
+import com.dam.cicd.entidades.Anfitrion;
+import com.dam.cicd.excepciones.MantenimientoException;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 
