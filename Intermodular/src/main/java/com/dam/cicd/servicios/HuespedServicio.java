@@ -21,7 +21,7 @@ public class HuespedServicio {
 
     /**
      * Construye una nueva instancia del servicio de huéspedes.
-     * * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia.
+     * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia.
      */
     public HuespedServicio(EntityManager em) {
         this.em = em;

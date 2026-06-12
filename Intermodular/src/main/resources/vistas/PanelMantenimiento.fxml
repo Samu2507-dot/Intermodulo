@@ -7,18 +7,25 @@
     <stylesheets>
         <URL value="@decoracion.css" />
     </stylesheets>
-    <center>
-        <VBox spacing="20" style="-fx-padding: 40;">
 
-            <Label text="Incidencias Asignadas" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+    <center>
+        <VBox spacing="25" style="-fx-padding: 40;">
+
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="Cerrar Sesión" onAction="#handleCerrarSesion" styleClass="button-danger"/>
+            </HBox>
+
+            <Label text="Incidencias Asignadas" styleClass="titulo-seccion"/>
+
             <TableView fx:id="tablaTareas" VBox.vgrow="ALWAYS" styleClass="table-view">
                 <columns>
-                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="400" />
-                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="150" />
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="450" />
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="200" />
                 </columns>
             </TableView>
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Button text="Marcar como Completado" onAction="#handleMarcarCompletado" styleClass="button-primary" style="-fx-background-color: #1E3A8A;"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button text="Marcar como Completado" onAction="#handleMarcarCompletado" styleClass="button-primary"/>
                 <Label fx:id="lblMensaje" style="-fx-text-fill: #059669; -fx-font-weight: bold;"/>
             </HBox>
         </VBox>

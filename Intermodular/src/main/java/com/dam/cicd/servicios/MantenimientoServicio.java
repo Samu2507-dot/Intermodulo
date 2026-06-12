@@ -19,7 +19,7 @@ public class MantenimientoServicio {
 
     /**
      * Construye una nueva instancia del servicio de mantenimientos.
-     * * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia.
+     * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia.
      */
     public MantenimientoServicio(EntityManager em) {
         this.em = em;

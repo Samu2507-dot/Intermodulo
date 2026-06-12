@@ -7,29 +7,52 @@
     <stylesheets>
         <URL value="@decoracion.css" />
     </stylesheets>
+
     <top>
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 15 40; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
             <Label text="Roomly" style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: #1E3A8A;"/>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Mis Reservas" styleClass="nav-btn"/>
+            <Button text="Cerrar Sesión" onAction="#handleCerrarSesion" styleClass="button-danger"/>
         </HBox>
     </top>
-    <center>
-        <VBox spacing="20" style="-fx-padding: 40 100 40 100;">
-            <Label fx:id="lblMensaje" />
-            <HBox alignment="CENTER" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 32; -fx-border-color: #E5E7EB; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
-                <TextField fx:id="txtDestino" promptText="¿A dónde quieres ir?" styleClass="text-field" HBox.hgrow="ALWAYS"/>
-                <DatePicker fx:id="dateInicio" promptText="Llegada" />
-                <Button text="Buscar" styleClass="button-primary"/>
-            </HBox>
 
-            <Label text="Tus reservas actuales" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #111827;"/>
-            <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS" styleClass="table-view">
-                <columns>
-                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="300" />
-                    <TableColumn fx:id="colFechas" text="Fecha Entrada" prefWidth="200" />
-                </columns>
-            </TableView>
-        </VBox>
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="15" style="-fx-padding: 20 60 20 60;">
+
+                <Label fx:id="lblMensaje" style="-fx-text-fill: #059669; -fx-font-weight: bold;"/>
+
+                <VBox spacing="5">
+                    <Label text="Alojamientos Disponibles" styleClass="titulo-seccion"/>
+                    <TableView fx:id="tablaAlojamientos" minHeight="300" prefHeight="300" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colFoto" text="Foto" prefWidth="100" />
+                            <TableColumn fx:id="colNombreAlojamiento" text="Nombre" prefWidth="180" />
+                            <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="250" />
+                            <TableColumn fx:id="colAnfitrion" text="Anfitrión" prefWidth="120" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10; -fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                    <Label text="Entrada:" style="-fx-text-fill: #4B5563;"/>
+                    <DatePicker fx:id="dateInicio" prefWidth="120"/>
+                    <Label text="Salida:" style="-fx-text-fill: #4B5563;"/>
+                    <DatePicker fx:id="dateFin" prefWidth="120"/>
+                    <Button text="Reservar" onAction="#handleReservar" styleClass="button-primary"/>
+                </HBox>
+
+                <VBox spacing="5">
+                    <Label text="Tus reservas actuales" styleClass="titulo-seccion"/>
+                    <TableView fx:id="tablaReservas" minHeight="150" prefHeight="150" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="325" />
+                            <TableColumn fx:id="colFechas" text="Periodo" prefWidth="325" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>

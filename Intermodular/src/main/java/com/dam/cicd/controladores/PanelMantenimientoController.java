@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Controlador para la gestión de tareas de mantenimiento.
- * Recibe al operario logueado y filtra las tareas asignadas según su ID.
+ * Controlador encargado de gestionar el panel de los operarios de mantenimiento.
+ * Permite visualizar las tareas asignadas, filtrar las pendientes y actualizar
+ * el estado de las incidencias en el sistema Roomly.
  */
 public class PanelMantenimientoController {
 
@@ -32,46 +33,30 @@ public class PanelMantenimientoController {
     @FXML private TableColumn<Mantenimiento, String> colEstado;
     @FXML private Label lblMensaje;
 
+    /**
+     * Inicializa los componentes de la interfaz, configurando los factories de celdas
+     * y la instancia del servicio de mantenimiento.
+     */
     @FXML
     public void initialize() {
-        // Inicializamos el servicio con el EntityManager de la utilidad JPA
         this.servicio = new MantenimientoServicio(JPAUtil.getEntityManager());
 
-        // Configuración de las columnas de la tabla
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
     }
 
     /**
-     * Este método es el punto de entrada para pasar la identidad del usuario
-     * desde el LoginController.
+     * Define el operario que ha iniciado sesión y carga sus tareas pendientes asignadas.
+     * @param operario El operario de mantenimiento autenticado.
      */
     public void setOperario(OperarioMantenimiento operario) {
         this.operarioLogueado = operario;
         cargarMisTareas();
     }
-    @FXML
-    private void logout() {
-        try {
-            // Cargar la vista de Login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Login.fxml")); // Asegúrate de que la ruta sea correcta
-            Parent root = loader.load();
 
-            // Obtener el stage actual
-            Stage stage = (Stage) lblMensaje.getScene().getWindow(); // lblMensaje existe en todos tus paneles
-
-            // Cambiar la escena
-            stage.setScene(new Scene(root));
-            stage.setTitle("Roomly - Login");
-            stage.centerOnScreen();
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     /**
-     * Acción para actualizar el estado de una incidencia a "Completado".
+     * Actualiza el estado de la tarea seleccionada en la tabla a "Completado"
+     * y refresca la lista de tareas pendientes.
      */
     @FXML
     private void handleMarcarCompletado() {
@@ -82,11 +67,8 @@ public class PanelMantenimientoController {
         }
 
         try {
-            // Llamamos al servicio para persistir el cambio
             servicio.actualizarEstadoMantenimiento(seleccionada.getIdMantenimiento(), "Completado");
             lblMensaje.setText("¡Tarea marcada como completada!");
-
-            // Refrescamos la vista
             cargarMisTareas();
         } catch (Exception e) {
             lblMensaje.setText("Error: " + e.getMessage());
@@ -95,21 +77,20 @@ public class PanelMantenimientoController {
     }
 
     /**
-     * Carga las tareas no completadas asignadas al operario actual.
+     * Consulta y filtra las tareas de mantenimiento asignadas al operario logueado
+     * que aún no han sido completadas.
      */
     private void cargarMisTareas() {
         if (operarioLogueado == null) return;
 
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            // Consulta JPQL filtrando por ID de operario y estado
             List<Mantenimiento> tareas = em.createQuery(
                             "SELECT m FROM Mantenimiento m WHERE m.operario.id = :id AND m.estado != 'Completado'",
                             Mantenimiento.class)
                     .setParameter("id", operarioLogueado.getIdOperario())
                     .getResultList();
 
-            // Pasamos la lista a formato Observable para que la tabla lo entienda
             ObservableList<Mantenimiento> listaTareas = FXCollections.observableArrayList(tareas);
             tablaTareas.setItems(listaTareas);
 
@@ -121,5 +102,23 @@ public class PanelMantenimientoController {
         }
     }
 
+    /**
+     * Finaliza la sesión actual del operario y redirige la aplicación a la vista de login.
+     */
+    @FXML
+    private void handleCerrarSesion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/LoginVista.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Login - Roomly");
+            stage.setScene(new Scene(root));
+            stage.show();
 
+            Stage stageActual = (Stage) lblMensaje.getScene().getWindow();
+            stageActual.close();
+        } catch (Exception e) {
+            lblMensaje.setText("Error al cerrar sesión: " + e.getMessage());
+        }
+    }
 }
