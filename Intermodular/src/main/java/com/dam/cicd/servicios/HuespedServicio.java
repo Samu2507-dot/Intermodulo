@@ -1,7 +1,10 @@
-package servicios;
+package com.dam.cicd.servicios;
 
-import entidades.*;
-import excepciones.*;
+import com.dam.cicd.entidades.Alojamiento;
+import com.dam.cicd.entidades.Huesped;
+import com.dam.cicd.entidades.Resena;
+import com.dam.cicd.entidades.Reserva;
+import com.dam.cicd.excepciones.ReservaInvalidaException;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;

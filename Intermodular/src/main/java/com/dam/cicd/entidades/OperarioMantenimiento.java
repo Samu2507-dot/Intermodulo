@@ -1,4 +1,4 @@
-package entidades;
+package com.dam.cicd.entidades;
 
 import jakarta.persistence.*;
 

@@ -1,6 +1,15 @@
-import entidades.*;
-import servicios.*;
-import excepciones.*;
+package com.dam.cicd;
+
+import com.dam.cicd.entidades.*;
+import com.dam.cicd.entidades.*;
+import com.dam.cicd.excepciones.AutenticacionException;
+import com.dam.cicd.excepciones.MantenimientoException;
+import com.dam.cicd.excepciones.ReservaInvalidaException;
+import com.dam.cicd.servicios.AnfitrionServicio;
+import com.dam.cicd.servicios.HuespedServicio;
+import com.dam.cicd.servicios.MantenimientoServicio;
+import com.dam.cicd.servicios.UsuarioServicio;
+import com.dam.cicd.servicios.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dam.cicd</groupId>
-    <artifactId>JPA003</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>ROOMLY</artifactId>
+    <version>1.0</version>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -90,16 +90,58 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.dam.cicd.MainApp</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
                     <name>RoomlyDesktop</name>
-                    <appVersion>1.0.0</appVersion>
-                    <vendor>PaulaCompany</vendor>
-                    <mainClass>tu.paquete.MainApp</mainClass> <winDirChooser>true</winDirChooser>
+                    <appVersion>1.0</appVersion>
+                    <destination>C:\Users\paula\Desktop\InstaladorRoomly</destination>
+                    <mainClass>com.dam.cicd.MainApp</mainClass>
+                    <input>target</input>
+                    <mainJar>ROOMLY-1.0.jar</mainJar>
+
+                    <modulePaths>
+                        <modulePath>${project.build.directory}/dependency</modulePath>
+                    </modulePaths>
+
+                    <addModules>java.sql,java.naming,java.desktop,jdk.crypto.ec,javafx.controls,javafx.fxml,javafx.graphics</addModules>
+                    <winDirChooser>true</winDirChooser>
                     <winShortcut>true</winShortcut>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

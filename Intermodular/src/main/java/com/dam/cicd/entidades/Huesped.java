@@ -1,20 +1,20 @@
-package entidades;
+package com.dam.cicd.entidades;
 
 import jakarta.persistence.*;
 
 /**
- * Entidad que representa a un Anfitrión en el sistema Roomly.
+ * Entidad que representa a un Huésped en el sistema Roomly.
  * Almacena los datos personales, de contacto y credenciales de acceso de los usuarios
- * propietarios que publican y gestionan alojamientos, mapeados con la tabla 'anfitriones'.
+ * clientes que realizan reservas de alojamientos, mapeados con la tabla 'huespedes'.
  */
 @Entity
-@Table(name = "anfitriones")
-public class Anfitrion {
+@Table(name = "huespedes")
+public class Huesped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_anfitrion", nullable = false)
-    private Integer idAnfitrion;
+    @Column(name = "id_huesped", nullable = false)
+    private Integer idHuesped;
 
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
@@ -34,8 +34,8 @@ public class Anfitrion {
     @Column(name = "pass", nullable = false, length = 60)
     private String pass;
 
-    public Integer getIdAnfitrion() { return idAnfitrion; }
-    public void setIdAnfitrion(Integer idAnfitrion) { this.idAnfitrion = idAnfitrion; }
+    public Integer getIdHuesped() { return idHuesped; }
+    public void setIdHuesped(Integer idHuesped) { this.idHuesped = idHuesped; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

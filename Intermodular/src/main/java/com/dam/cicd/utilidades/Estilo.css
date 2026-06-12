@@ -1,0 +1,47 @@
+/* Paleta de colores Roomly */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Inputs minimalistas */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: #F4F7F6;
+    -fx-background-radius: 12;
+    -fx-border-color: transparent;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #1E3A8A;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+/* Botones con gradiente */
+.button-primary {
+    -fx-background-color: linear-gradient(to right, #10B981, #059669);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.3), 10, 0, 0, 4);
+}
+
+.button-primary:hover {
+    -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.4), 15, 0, 0, 6);
+}
+
+/* Tablas Modernas */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell {
+    -fx-cell-size: 40px;
+}

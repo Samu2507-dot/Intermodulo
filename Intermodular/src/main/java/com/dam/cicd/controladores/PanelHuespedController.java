@@ -1,12 +1,13 @@
-package controladores;
+package com.dam.cicd.controladores;
 
-import entidades.*;
+import com.dam.cicd.entidades.Huesped;
+import com.dam.cicd.entidades.Reserva;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import servicios.HuespedServicio;
-import utilidades.JPAUtil;
+import com.dam.cicd.servicios.HuespedServicio;
+import com.dam.cicd.utilidades.JPAUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

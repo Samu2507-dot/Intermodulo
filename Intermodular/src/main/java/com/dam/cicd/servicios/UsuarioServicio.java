@@ -1,7 +1,9 @@
-package servicios;
+package com.dam.cicd.servicios;
 
-import entidades.*;
-import excepciones.*;
+import com.dam.cicd.entidades.Anfitrion;
+import com.dam.cicd.entidades.Huesped;
+import com.dam.cicd.entidades.OperarioMantenimiento;
+import com.dam.cicd.excepciones.AutenticacionException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.mindrot.jbcrypt.BCrypt;
