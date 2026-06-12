@@ -20,7 +20,7 @@ public class UsuarioServicio {
 
     /**
      * Construye una nueva instancia del servicio de usuarios.
-     * * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia y consultas.
+     * @param em El manejador de entidades (EntityManager) de JPA que se utilizará para las operaciones de persistencia y consultas.
      */
     public UsuarioServicio(EntityManager em) {
         this.em = em;
@@ -159,6 +159,11 @@ public class UsuarioServicio {
     /**
      * Registra un nuevo Operario de Mantenimiento en el sistema.
      * Basado en la entidad OperarioMantenimiento que solo requiere nombre y usuario.
+     * * @param nombre    Nombre del operario.
+     * @param usuario   Nombre de usuario para el sistema.
+     * @param passPlana Contraseña en texto plano.
+     * @return El objeto {@link OperarioMantenimiento} persistido.
+     * @throws AutenticacionException Si falla el registro en la base de datos.
      */
     public OperarioMantenimiento registrarOperario(String nombre, String usuario, String passPlana) throws AutenticacionException {
         OperarioMantenimiento o = new OperarioMantenimiento();

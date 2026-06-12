@@ -1,4 +1,4 @@
-/* --- Variables de Diseño Roomly --- */
+
 .root {
     -fx-base: #FFFFFF;
     -fx-font-family: 'Segoe UI', sans-serif;
@@ -8,7 +8,6 @@
     -fx-gris-texto: #4B5563;
 }
 
-/* --- Estilos de Botones --- */
 .nav-btn {
     -fx-background-color: transparent;
     -fx-text-fill: -fx-gris-texto;
@@ -34,10 +33,19 @@
 
 .button-primary:hover {
     -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.4), 10, 0, 0, 4);
+    -fx-background-color: #059669;
 }
 
-/* --- Estilos de Entradas de Texto --- */
-.text-field, .password-field, .combo-box {
+.button-danger {
+    -fx-background-color: #EF4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 24;
+    -fx-cursor: hand;
+}
+
+
+.text-field, .password-field, .combo-box, .date-picker {
     -fx-background-color: #ffffff;
     -fx-border-color: #D1D5DB;
     -fx-border-radius: 12;
@@ -45,12 +53,12 @@
     -fx-font-size: 14px;
 }
 
-.text-field:focused, .password-field:focused {
+.text-field:focused, .password-field:focused, .combo-box:focused, .date-picker:focused {
     -fx-border-color: -fx-azul-principal;
     -fx-border-width: 2;
 }
 
-/* --- Estilos de Tabla --- */
+
 .table-view {
     -fx-background-color: transparent;
 }
@@ -75,9 +83,37 @@
     -fx-cell-size: 45;
     -fx-border-color: #F3F4F6;
     -fx-border-width: 0 0 1 0;
+    -fx-background-color: white;
 }
 
 .table-view .table-row-cell:selected {
     -fx-background-color: #EFF6FF;
     -fx-text-fill: -fx-azul-principal;
+}
+
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 8;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #D1D5DB;
+    -fx-background-radius: 10;
+}
+
+
+.titulo-seccion {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
+}
+
+/* Esto es lo que elimina visualmente el espacio extra de las filas vacías */
+.table-view .table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.table-view .table-row-cell:empty .table-cell {
+    -fx-border-color: transparent;
 }

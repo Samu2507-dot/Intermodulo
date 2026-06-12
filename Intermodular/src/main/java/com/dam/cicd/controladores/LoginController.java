@@ -17,6 +17,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controlador encargado de gestionar el proceso de autenticación y registro de usuarios en la plataforma Roomly.
+ * Maneja la transición entre las vistas de login y registro, así como la inicialización de las interfaces
+ * específicas según el rol del usuario autenticado.
+ */
 public class LoginController {
     @FXML private ComboBox<String> regRol;
     @FXML private VBox panelLogin, panelRegistro;
@@ -26,14 +31,27 @@ public class LoginController {
 
     private UsuarioServicio usuarioServicio;
 
+    /**
+     * Inicializa el controlador y establece la instancia del servicio de usuarios utilizando el EntityManager de JPA.
+     */
     @FXML
     public void initialize() {
         this.usuarioServicio = new UsuarioServicio(JPAUtil.getEntityManager());
     }
 
+    /**
+     * Alterna la visibilidad de los paneles para mostrar la interfaz de registro de nuevos usuarios.
+     */
     @FXML private void mostrarRegistro() { panelLogin.setVisible(false); panelRegistro.setVisible(true); lblError.setText(""); }
+
+    /**
+     * Alterna la visibilidad de los paneles para mostrar la interfaz de inicio de sesión.
+     */
     @FXML private void mostrarLogin() { panelRegistro.setVisible(false); panelLogin.setVisible(true); lblError.setText(""); }
 
+    /**
+     * Procesa los datos del formulario de registro y delega la creación del usuario al servicio correspondiente según su rol.
+     */
     @FXML
     private void procesarRegistro() {
         String rol = regRol.getValue();
@@ -58,6 +76,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Valida las credenciales introducidas y solicita el acceso al sistema mediante el servicio de usuarios.
+     */
     @FXML
     private void procesarLogin() {
         try {
@@ -68,36 +89,40 @@ public class LoginController {
             lblError.setText(e.getMessage());
         }
     }
+
+    /**
+     * Carga y muestra la vista específica (FXML) según el tipo de entidad (rol) del usuario que inicia sesión,
+     * inyectando el objeto usuario correspondiente en el controlador de dicha vista.
+     * * @param usuario El objeto que representa al usuario logueado (Huesped, Anfitrion o OperarioMantenimiento).
+     */
     private void cargarInterfazPorRol(Object usuario) {
         String fxmlRuta = null;
-
         if (usuario instanceof Huesped) fxmlRuta = "/vistas/PanelHuesped.fxml";
         else if (usuario instanceof Anfitrion) fxmlRuta = "/vistas/PanelAnfitrion.fxml";
         else if (usuario instanceof OperarioMantenimiento) fxmlRuta = "/vistas/PanelMantenimiento.fxml";
 
         try {
-            if (fxmlRuta == null) throw new IOException("Rol no reconocido: " + usuario.getClass().getName());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlRuta));
+            Parent root = loader.load();
 
-            // DEPURACIÓN: Comprobamos si el recurso existe antes de intentar cargarlo
-            java.net.URL url = getClass().getResource(fxmlRuta);
-            System.out.println("DEBUG: Buscando archivo en -> " + fxmlRuta);
-            System.out.println("DEBUG: ¿URL encontrada? -> " + (url != null));
 
-            if (url == null) {
-                throw new IOException("Archivo FXML no encontrado en el classpath: " + fxmlRuta);
+            if (usuario instanceof Huesped) {
+                PanelHuespedController controller = loader.getController();
+                controller.setUsuario((Huesped) usuario);
+            }
+            else if (usuario instanceof Anfitrion) {
+                PanelAnfitrionController controller = loader.getController();
+                controller.setAnfitrion((Anfitrion) usuario);
             }
 
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent root = loader.load();
 
             Stage stage = (Stage) txtUsuario.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (Exception e) {
             lblError.setStyle("-fx-text-fill: red;");
             lblError.setText("Error al cargar pantalla: " + e.getMessage());
-            e.printStackTrace(); // Esto mostrará el error real en tu consola
+            e.printStackTrace();
         }
     }
 

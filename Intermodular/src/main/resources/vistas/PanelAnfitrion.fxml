@@ -7,38 +7,67 @@
     <stylesheets>
         <URL value="@decoracion.css" />
     </stylesheets>
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 15 40; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
+            <Label text="Roomly - Panel Anfitrión" style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: #1E3A8A;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Cerrar Sesión" onAction="#handleCerrarSesion" styleClass="button-danger"/>
+        </HBox>
+    </top>
+
     <center>
-        <VBox spacing="20" style="-fx-padding: 40;">
-            <Label fx:id="lblMensaje" />
-            <Label text="Publicar nuevo alojamiento" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-color: transparent;">
+            <VBox spacing="20" style="-fx-padding: 40;">
 
-            <GridPane hgap="10" vgap="10">
-                <TextField fx:id="txtNombre" promptText="Nombre del alojamiento" GridPane.columnIndex="0" styleClass="text-field"/>
-                <TextField fx:id="txtDireccion" promptText="Dirección" GridPane.columnIndex="1" styleClass="text-field"/>
-                <TextField fx:id="txtPrecio" promptText="Precio por día" GridPane.columnIndex="2" styleClass="text-field"/>
-            </GridPane>
+                <Label fx:id="lblMensaje" style="-fx-text-fill: #059669; -fx-font-weight: bold;"/>
 
-            <Button text="Publicar en Roomly" onAction="#handlePublicar" styleClass="button-primary"/>
+                <!-- Sección de Publicación y Edición -->
+                <VBox spacing="10">
+                    <Label text="Gestionar mis alojamientos" styleClass="titulo-seccion"/>
+                    <HBox spacing="10">
+                        <TextField fx:id="txtNombre" promptText="Nombre" styleClass="text-field" prefWidth="200"/>
+                        <TextField fx:id="txtDireccion" promptText="Dirección" styleClass="text-field" prefWidth="200"/>
+                        <TextField fx:id="txtPrecio" promptText="Precio/Día" styleClass="text-field" prefWidth="100"/>
+                        <TextField fx:id="txtFotoUrl" promptText="URL Foto" styleClass="text-field" prefWidth="200"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button text="Publicar Nuevo" onAction="#handlePublicar" styleClass="button-primary"/>
+                        <Button text="Guardar Cambios" onAction="#handleGuardarCambios" styleClass="button-secondary"/>
+                    </HBox>
+                </VBox>
 
-            <Label text="Mis Alojamientos" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-            <TableView fx:id="tablaMisAlojamientos" prefHeight="150" styleClass="table-view">
-                <columns>
-                    <TableColumn fx:id="colFoto" text="Foto (URL)" prefWidth="120" />
-                    <TableColumn fx:id="colNombreAlojamiento" text="Nombre" prefWidth="150" />
-                    <TableColumn fx:id="colDireccionAlojamiento" text="Dirección" prefWidth="200" />
-                    <TableColumn fx:id="colPrecioAlojamiento" text="Precio/Día" prefWidth="80" />
-                </columns>
-            </TableView>
+                <!-- Tabla Mis Alojamientos -->
+                <VBox spacing="5">
+                    <Label text="Mis Alojamientos" styleClass="titulo-seccion"/>
+                    <TableView fx:id="tablaMisAlojamientos" prefHeight="150" minHeight="150" maxHeight="150" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colFoto" text="Foto" prefWidth="100" />
+                            <TableColumn fx:id="colNombreAlojamiento" text="Nombre" prefWidth="150" />
+                            <TableColumn fx:id="colDireccionAlojamiento" text="Dirección" prefWidth="200" />
+                            <TableColumn fx:id="colPrecioAlojamiento" text="Precio/Día" prefWidth="100" />
+                        </columns>
+                    </TableView>
+                </VBox>
 
-            <Label text="Reservas Recibidas" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-            <TableView fx:id="tablaReservasRecibidas" VBox.vgrow="ALWAYS" styleClass="table-view">
-                <columns>
-                    <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="150" />
-                    <TableColumn fx:id="colHuesped" text="Huésped" prefWidth="150" />
-                    <TableColumn fx:id="colEntrada" text="Fecha Entrada" prefWidth="150" />
-                    <TableColumn fx:id="colEstadoReserva" text="Estado" prefWidth="100" />
-                </columns>
-            </TableView>
-        </VBox>
+                <!-- Sección Reservas y Facturación -->
+                <VBox spacing="5">
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <Label text="Reservas Recibidas" styleClass="titulo-seccion"/>
+                        <Button text="Consultar Facturación Total" onAction="#handleVerFacturacion" styleClass="button-primary"/>
+                        <Label fx:id="lblFacturacion" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    </HBox>
+                    <TableView fx:id="tablaReservasRecibidas" prefHeight="150" minHeight="150" maxHeight="150" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="180" />
+                            <TableColumn fx:id="colHuesped" text="Huésped" prefWidth="150" />
+                            <TableColumn fx:id="colEntrada" text="Fecha Entrada" prefWidth="120" />
+                            <TableColumn fx:id="colEstadoReserva" text="Estado" prefWidth="100" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>

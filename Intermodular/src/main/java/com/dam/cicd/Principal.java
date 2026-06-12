@@ -55,7 +55,8 @@ public class Principal {
                     a1.getIdAnfitrion(),
                     "Apartamento esquina Fernandez",
                     "Calle Mayor 14, Madrid",
-                    new BigDecimal("85.00")
+                    new BigDecimal("85.00"),
+                    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" // <-- ¡Añade la URL aquí!
             );
             log.info("🔹 Alojamiento publicado con ID: {}", al1.getIdAlojamiento());
 

@@ -43,5 +43,9 @@
 }
 
 .table-row-cell {
-    -fx-cell-size: 40px;
+    -fx-cell-size: 100px;
+}
+
+.table-cell {
+    -fx-alignment: CENTER_LEFT; /* O simplemente CENTER si prefieres todo centrado */
 }
