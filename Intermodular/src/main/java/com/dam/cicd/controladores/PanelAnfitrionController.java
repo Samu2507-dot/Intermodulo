@@ -1,21 +1,16 @@
 package com.dam.cicd.controladores;
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import com.dam.cicd.entidades.Anfitrion;
+import com.dam.cicd.entidades.Alojamiento;
 import com.dam.cicd.entidades.Reserva;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import com.dam.cicd.servicios.AnfitrionServicio;
 import com.dam.cicd.utilidades.JPAUtil;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import jakarta.persistence.EntityManager;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,105 +19,80 @@ public class PanelAnfitrionController {
     private AnfitrionServicio servicio;
     private Anfitrion anfitrionLogueado;
 
+    // Elementos de la UI
     @FXML private TextField txtNombre, txtDireccion, txtPrecio;
-    @FXML private TextField txtIdModificar, txtNuevoNombre, txtNuevoPrecio;
     @FXML private Label lblMensaje;
 
+    // Tabla Reservas
     @FXML private TableView<Reserva> tablaReservasRecibidas;
     @FXML private TableColumn<Reserva, String> colAlojamiento;
     @FXML private TableColumn<Reserva, String> colHuesped;
     @FXML private TableColumn<Reserva, String> colEntrada;
+    @FXML private TableColumn<Reserva, String> colEstadoReserva;
+
+    // Tabla Mis Alojamientos
+    @FXML private TableView<Alojamiento> tablaMisAlojamientos;
+    @FXML private TableColumn<Alojamiento, String> colFoto;
+    @FXML private TableColumn<Alojamiento, String> colNombreAlojamiento;
+    @FXML private TableColumn<Alojamiento, String> colDireccionAlojamiento;
+    @FXML private TableColumn<Alojamiento, BigDecimal> colPrecioAlojamiento;
 
     @FXML
     public void initialize() {
         this.servicio = new AnfitrionServicio(JPAUtil.getEntityManager());
 
-        // Configuración de las columnas de la tabla
+        // Configuración columnas Reservas
         colAlojamiento.setCellValueFactory(new PropertyValueFactory<>("alojamiento"));
         colHuesped.setCellValueFactory(new PropertyValueFactory<>("huesped"));
         colEntrada.setCellValueFactory(new PropertyValueFactory<>("fechaEntrada"));
+
+        // Configuración columnas Alojamientos
+        // --- Configuración de la columna de Foto (con visualización de imagen) ---
+        colFoto.setCellValueFactory(new PropertyValueFactory<>("fotoUrl"));
+        colFoto.setCellFactory(column -> new TableCell<Alojamiento, String>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(String url, boolean empty) {
+                super.updateItem(url, empty);
+                if (empty || url == null || url.isBlank()) {
+                    setGraphic(null);
+                } else {
+                    // Cargamos la imagen con un ancho fijo para que no deforme la tabla
+                    Image img = new Image(url, 80, 50, true, true);
+                    imageView.setImage(img);
+                    setGraphic(imageView);
+                }
+            }
+        });
+        colNombreAlojamiento.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDireccionAlojamiento.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+        colPrecioAlojamiento.setCellValueFactory(new PropertyValueFactory<>("precioDia"));
     }
 
     public void setAnfitrion(Anfitrion anfitrion) {
         this.anfitrionLogueado = anfitrion;
         cargarReservasRecibidas();
+        cargarMisAlojamientos();
     }
 
-    private void cargarReservasRecibidas() {
-        if (anfitrionLogueado == null) return;
-
+    private void cargarMisAlojamientos() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            // Filtramos reservas donde el alojamiento pertenece al anfitrión logueado
-            List<Reserva> reservas = em.createQuery(
-                            "SELECT r FROM Reserva r WHERE r.alojamiento.anfitrion.id = :idAnfitrion", Reserva.class)
-                    .setParameter("idAnfitrion", anfitrionLogueado.getIdAnfitrion())
+            List<Alojamiento> lista = em.createQuery(
+                            "SELECT a FROM Alojamiento a WHERE a.anfitrion.id = :id", Alojamiento.class)
+                    .setParameter("id", anfitrionLogueado.getIdAnfitrion())
                     .getResultList();
-
-            ObservableList<Reserva> lista = FXCollections.observableArrayList(reservas);
-            tablaReservasRecibidas.setItems(lista);
-        } catch (Exception e) {
-            e.printStackTrace();
+            tablaMisAlojamientos.setItems(FXCollections.observableArrayList(lista));
         } finally {
             em.close();
         }
     }
 
-    @FXML
-    private void handlePublicar() {
-        try {
-            if (anfitrionLogueado == null) throw new Exception("No hay sesión iniciada.");
-
-            servicio.publicarAlojamiento(
-                    anfitrionLogueado.getIdAnfitrion(),
-                    txtNombre.getText(),
-                    txtDireccion.getText(),
-                    new BigDecimal(txtPrecio.getText())
-            );
-            lblMensaje.setText("¡Alojamiento publicado con éxito!");
-            limpiarCamposPublicar();
-            // Opcional: Recargar tabla si fuera necesario
-        } catch (Exception e) {
-            lblMensaje.setText("Error: " + e.getMessage());
-        }
+    private void cargarReservasRecibidas() {
+        // ... (Tu código anterior de carga de reservas)
     }
 
-    @FXML
-    private void handleModificar() {
-        try {
-            servicio.modificarAnuncio(
-                    Integer.parseInt(txtIdModificar.getText()),
-                    txtNuevoNombre.getText(),
-                    new BigDecimal(txtNuevoPrecio.getText())
-            );
-            lblMensaje.setText("Alojamiento actualizado correctamente.");
-        } catch (Exception e) {
-            lblMensaje.setText("Error: " + e.getMessage());
-        }
-    }
-
-    private void limpiarCamposPublicar() {
-        txtNombre.clear(); txtDireccion.clear(); txtPrecio.clear();
-    }
-
-    @FXML
-    private void logout() {
-        try {
-            // Cargar la vista de Login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Login.fxml")); // Asegúrate de que la ruta sea correcta
-            Parent root = loader.load();
-
-            // Obtener el stage actual
-            Stage stage = (Stage) lblMensaje.getScene().getWindow(); // lblMensaje existe en todos tus paneles
-
-            // Cambiar la escena
-            stage.setScene(new Scene(root));
-            stage.setTitle("Roomly - Login");
-            stage.centerOnScreen();
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    @FXML private void handlePublicar() { /* ... tu lógica ... */ }
+    // Otros métodos...
 }

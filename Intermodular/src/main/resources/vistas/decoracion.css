@@ -1,14 +1,14 @@
+/* --- Variables de Diseño Roomly --- */
 .root {
     -fx-base: #FFFFFF;
-    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    /* Variables de Roomly */
+    -fx-font-family: 'Segoe UI', sans-serif;
     -fx-azul-principal: #1E3A8A;
     -fx-verde-vitalidad: #10B981;
     -fx-gris-fondo: #F4F7F6;
     -fx-gris-texto: #4B5563;
 }
 
-/* Botón de navegación (el que habías puesto) */
+/* --- Estilos de Botones --- */
 .nav-btn {
     -fx-background-color: transparent;
     -fx-text-fill: -fx-gris-texto;
@@ -22,7 +22,6 @@
     -fx-text-fill: -fx-azul-principal;
 }
 
-/* Botón de acción principal (Ej: Buscar, Publicar) */
 .button-primary {
     -fx-background-color: linear-gradient(to bottom right, #10B981, #059669);
     -fx-text-fill: white;
@@ -30,31 +29,41 @@
     -fx-background-radius: 24;
     -fx-padding: 8 20;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.2), 5, 0, 0, 2);
 }
 
 .button-primary:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(5, 150, 105, 0.3), 10, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.4), 10, 0, 0, 4);
 }
 
-.text-field {
-    -fx-background-color: transparent;
+/* --- Estilos de Entradas de Texto --- */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: #ffffff;
     -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
     -fx-padding: 8 12;
+    -fx-font-size: 14px;
 }
 
-.text-field:focused {
+.text-field:focused, .password-field:focused {
     -fx-border-color: -fx-azul-principal;
     -fx-border-width: 2;
 }
 
+/* --- Estilos de Tabla --- */
 .table-view {
     -fx-background-color: transparent;
 }
 
-.table-view .column-header {
+.table-view .column-header-background {
     -fx-background-color: #F9FAFB;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
     -fx-border-color: #E5E7EB;
+    -fx-border-width: 0 0 1 0;
 }
 
 .table-view .column-header .label {
@@ -63,5 +72,12 @@
 }
 
 .table-view .table-row-cell {
-    -fx-cell-size: 40;
+    -fx-cell-size: 45;
+    -fx-border-color: #F3F4F6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #EFF6FF;
+    -fx-text-fill: -fx-azul-principal;
 }

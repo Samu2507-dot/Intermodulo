@@ -42,6 +42,12 @@ public class Alojamiento {
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
 
+    @Column(name = "foto_url")
+    private String fotoUrl;
+
+    public String getFotoUrl() { return fotoUrl; }
+    public void setFotoUrl(String fotoUrl) { this.fotoUrl = fotoUrl; }
+
     public BigDecimal getPrecioDia() { return precioDia; }
     public void setPrecioDia(BigDecimal precioDia) { this.precioDia = precioDia; }
 

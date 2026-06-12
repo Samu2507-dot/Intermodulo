@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
 <BorderPane style="-fx-background-color: #F4F7F6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dam.cicd.controladores.PanelAnfitrionController">
+    <stylesheets>
+        <URL value="@decoracion.css" />
+    </stylesheets>
     <center>
         <VBox spacing="20" style="-fx-padding: 40;">
             <Label fx:id="lblMensaje" />
@@ -17,12 +21,22 @@
             <Button text="Publicar en Roomly" onAction="#handlePublicar" styleClass="button-primary"/>
 
             <Label text="Mis Alojamientos" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <TableView fx:id="tablaMisAlojamientos" prefHeight="150" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colFoto" text="Foto (URL)" prefWidth="120" />
+                    <TableColumn fx:id="colNombreAlojamiento" text="Nombre" prefWidth="150" />
+                    <TableColumn fx:id="colDireccionAlojamiento" text="Dirección" prefWidth="200" />
+                    <TableColumn fx:id="colPrecioAlojamiento" text="Precio/Día" prefWidth="80" />
+                </columns>
+            </TableView>
 
+            <Label text="Reservas Recibidas" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
             <TableView fx:id="tablaReservasRecibidas" VBox.vgrow="ALWAYS" styleClass="table-view">
                 <columns>
                     <TableColumn fx:id="colAlojamiento" text="Alojamiento" prefWidth="150" />
                     <TableColumn fx:id="colHuesped" text="Huésped" prefWidth="150" />
                     <TableColumn fx:id="colEntrada" text="Fecha Entrada" prefWidth="150" />
+                    <TableColumn fx:id="colEstadoReserva" text="Estado" prefWidth="100" />
                 </columns>
             </TableView>
         </VBox>
