@@ -16,11 +16,10 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Controlador principal para la gestión del panel del huésped.
- * Facilita la visualización de alojamientos disponibles, la creación de nuevas reservas
- * y el seguimiento de las reservas históricas del usuario.
  */
 public class PanelHuespedController {
 
@@ -40,21 +39,29 @@ public class PanelHuespedController {
     @FXML private TableColumn<Alojamiento, String> colDireccion;
     @FXML private TableColumn<Alojamiento, String> colAnfitrion;
 
-    /**
-     * Inicializa los componentes de la interfaz, configurando los factories de celdas
-     * para las tablas de reservas y alojamientos, y cargando el catálogo disponible.
-     */
     @FXML
     public void initialize() {
         tablaAlojamientos.setFixedCellSize(100.0);
 
-        colAlojamiento.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getAlojamiento().getNombre()));
+        // Configuración de columnas usando métodos auxiliares para evitar código duplicado
+        colAlojamiento.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getAlojamiento().getNombre()));
+        colFechas.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getFechaEntrada() + " al " + d.getValue().getFechaSalida()));
 
-        colFechas.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getFechaEntrada() + " al " + data.getValue().getFechaSalida()));
+        setupColumn(colNombreAlojamiento, "nombre");
+        setupColumn(colDireccion, "direccion");
+        colAnfitrion.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getAnfitrion().getNombre()));
 
+        setupFotoColumn();
+
+        cargarTodosLosAlojamientos();
+    }
+
+
+    private <T> void setupColumn(TableColumn<T, String> column, String property) {
+        column.setCellValueFactory(new PropertyValueFactory<>(property));
+    }
+
+    private void setupFotoColumn() {
         colFoto.setCellValueFactory(new PropertyValueFactory<>("fotoUrl"));
         colFoto.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -64,39 +71,23 @@ public class PanelHuespedController {
                 if (empty || url == null || url.isBlank()) {
                     setGraphic(null);
                 } else {
-                    Image img = new Image(url, 130, 90, true, true);
-                    imageView.setImage(img);
+                    imageView.setImage(new Image(url, 130, 90, true, true));
                     setGraphic(imageView);
                 }
             }
         });
-
-        colNombreAlojamiento.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
-        colAnfitrion.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getAnfitrion().getNombre()));
-
-        cargarTodosLosAlojamientos();
     }
 
-    /**
-     * Establece el huésped que ha iniciado sesión y carga sus reservas actuales.
-     * @param huesped El usuario logueado en el sistema.
-     */
     public void setUsuario(Huesped huesped) {
         this.huespedLogueado = huesped;
         cargarMisReservas();
     }
 
-    /**
-     * Consulta la base de datos para obtener y listar todas las reservas realizadas por el huésped logueado.
-     */
     private void cargarMisReservas() {
         if (huespedLogueado == null) return;
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            List<Reserva> reservas = em.createQuery(
-                            "SELECT r FROM Reserva r WHERE r.huesped.id = :idHuesped", Reserva.class)
+            List<Reserva> reservas = em.createQuery("SELECT r FROM Reserva r WHERE r.huesped.id = :idHuesped", Reserva.class)
                     .setParameter("idHuesped", huespedLogueado.getIdHuesped())
                     .getResultList();
             tablaReservas.setItems(FXCollections.observableArrayList(reservas));
@@ -105,24 +96,16 @@ public class PanelHuespedController {
         }
     }
 
-    /**
-     * Carga el catálogo completo de alojamientos disponibles para reserva desde la base de datos.
-     */
     private void cargarTodosLosAlojamientos() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            List<Alojamiento> todos = em.createQuery("SELECT a FROM Alojamiento a", Alojamiento.class)
-                    .getResultList();
+            List<Alojamiento> todos = em.createQuery("SELECT a FROM Alojamiento a", Alojamiento.class).getResultList();
             tablaAlojamientos.setItems(FXCollections.observableArrayList(todos));
         } finally {
             em.close();
         }
     }
 
-    /**
-     * Valida los datos del formulario y persiste una nueva reserva en la base de datos.
-     * Gestiona las transacciones JPA y calcula el coste total según los días seleccionados.
-     */
     @FXML
     private void handleReservar() {
         if (huespedLogueado == null) {
@@ -131,14 +114,11 @@ public class PanelHuespedController {
         }
 
         Alojamiento seleccionado = tablaAlojamientos.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
-            lblMensaje.setText("Por favor, selecciona un alojamiento.");
+        if (seleccionado == null || dateInicio.getValue() == null || dateFin.getValue() == null) {
+            lblMensaje.setText("Selecciona alojamiento y fechas válidas.");
             return;
         }
-        if (dateInicio.getValue() == null || dateFin.getValue() == null) {
-            lblMensaje.setText("Debes seleccionar fecha de entrada y salida.");
-            return;
-        }
+
         if (dateFin.getValue().isBefore(dateInicio.getValue())) {
             lblMensaje.setText("La fecha de salida debe ser posterior a la de entrada.");
             return;
@@ -148,18 +128,12 @@ public class PanelHuespedController {
         try {
             em.getTransaction().begin();
 
-            Huesped huespedGestionado = em.find(Huesped.class, huespedLogueado.getIdHuesped());
-            Alojamiento alojamientoGestionado = em.find(Alojamiento.class, seleccionado.getIdAlojamiento());
-
-            long numNoches = ChronoUnit.DAYS.between(dateInicio.getValue(), dateFin.getValue());
-            if (numNoches == 0) numNoches = 1;
-
-            BigDecimal precioPorDia = alojamientoGestionado.getPrecioDia();
-            BigDecimal total = precioPorDia.multiply(new BigDecimal(numNoches));
+            long numNoches = Math.max(1, ChronoUnit.DAYS.between(dateInicio.getValue(), dateFin.getValue()));
+            BigDecimal total = seleccionado.getPrecioDia().multiply(BigDecimal.valueOf(numNoches));
 
             Reserva nuevaReserva = new Reserva();
-            nuevaReserva.setAlojamiento(alojamientoGestionado);
-            nuevaReserva.setHuesped(huespedGestionado);
+            nuevaReserva.setAlojamiento(em.find(Alojamiento.class, seleccionado.getIdAlojamiento()));
+            nuevaReserva.setHuesped(em.find(Huesped.class, huespedLogueado.getIdHuesped()));
             nuevaReserva.setFechaEntrada(dateInicio.getValue());
             nuevaReserva.setFechaSalida(dateFin.getValue());
             nuevaReserva.setPrecioTotal(total);
@@ -170,36 +144,44 @@ public class PanelHuespedController {
 
             lblMensaje.setText("¡Reserva realizada! Total: " + total + "€");
             tablaAlojamientos.getSelectionModel().clearSelection();
-            dateInicio.setValue(null);
-            dateFin.setValue(null);
+            dateInicio.setValue(null); dateFin.setValue(null);
             cargarMisReservas();
 
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             lblMensaje.setText("Error: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             em.close();
         }
     }
 
-    /**
-     * Cierra la sesión actual y redirige al usuario a la pantalla de login.
-     */
     @FXML
     private void handleCerrarSesion() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/LoginVista.fxml"));
-            Parent root = loader.load();
+            // 1. Obtenemos la URL
+            var url = getClass().getResource("/vistas/LoginVista.fxml");
+
+            // 2. Comprobamos si existe
+            if (url == null) {
+                throw new Exception("No se ha encontrado el archivo FXML en /vistas/LoginVista.fxml");
+            }
+
+            // 3. Cargamos la vista
             Stage stage = new Stage();
+            stage.setScene(new Scene(FXMLLoader.load(url)));
             stage.setTitle("Login - Roomly");
-            stage.setScene(new Scene(root));
             stage.show();
 
-            Stage stageActual = (Stage) lblMensaje.getScene().getWindow();
-            stageActual.close();
+            // 4. Cerramos la ventana actual
+            ((Stage) lblMensaje.getScene().getWindow()).close();
+
         } catch (Exception e) {
-            lblMensaje.setText("Error al cerrar sesión: " + e.getMessage());
+            System.err.println("Error crítico al cargar la vista de login: " + e.getMessage());
+            lblMensaje.setText("Error al cerrar sesión.");
         }
     }
+
+
+
+
 }

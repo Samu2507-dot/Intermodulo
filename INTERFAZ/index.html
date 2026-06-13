@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roomly - Encuentra tu lugar perfecto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            color: #222222;
+            overflow: hidden;
+        }
+
+  
+        .login-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            max-width: 550px;
+            background: #ffffff;
+            z-index: 10;
+        }
+
+        .brand {
+            margin-bottom: 40px;
+        }
+
+        .brand h1 {
+            font-size: 36px;
+            color: #1E3A8A; 
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brand p {
+            color: #717171;
+            font-size: 16px;
+            margin-top: 6px;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #222222;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            background: #F4F7F6;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.25s ease;
+            color: #222222;
+        }
+
+        .form-group input:focus {
+            background: #ffffff;
+            border-color: #1E3A8A; /* Enfoque en Azul */
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+        }
+
+        .error-banner {
+            background-color: #FEE2E2;
+            border: 1px solid #EF4444;
+            color: #991B1B;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #10B981 0%, #059669 50%, #047857 100%); /* Gradiente Verde Vitalidad */
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            color: #b0b0b0;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #ebebeb;
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .switch-form {
+            text-align: center;
+            font-size: 15px;
+            color: #717171;
+        }
+
+        .switch-form a {
+            color: #222222;
+            text-decoration: underline;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            color: #059669; /* Enlace hover Verde */
+        }
+
+        /* --- LADO DERECHO: DETALLES VISUALES Y TEXTO --- */
+        .visual-section {
+            flex: 1.2;
+            background: linear-gradient(135deg, #0D9488 0%, #1E3A8A 50%, #0F172A 100%); /* Fondo degradado Océano/Azul profundo */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 60px 40px;
+            overflow: hidden;
+        }
+
+        /* Bloque de texto superior que rellena el espacio */
+        .visual-header-text {
+            max-width: 500px;
+            color: white;
+            z-index: 5;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            margin-top: auto;
+        }
+
+        .visual-header-text h2 {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .visual-header-text p {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* --- CONTENEDOR MARQUEE --- */
+        .reviews-marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            z-index: 5;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            gap: 24px;
+            animation: scrollLeft 28s linear infinite;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .reviews-marquee-wrapper:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        /* --- TARJETAS GRANDES CON FOTO DE HABITACIÓN --- */
+        .review-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            width: 360px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .review-body {
+            padding: 20px;
+        }
+
+        .review-user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .review-user-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .review-user-info p {
+            font-size: 12px;
+            color: #717171;
+            margin-top: 2px;
+        }
+
+        .review-stars {
+            color: #059669; /* Estrellas Verdes */
+            font-size: 13px;
+        }
+
+        .review-text {
+            font-size: 14px;
+            line-height: 1.45;
+            color: #484848;
+        }
+
+        /* --- CONTENEDOR GLOBAL DE ANIMACIÓN (EMOJIS) --- */
+        .emoji-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 55%; 
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .falling-emoji {
+            position: absolute;
+            top: -100px; 
+            user-select: none;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.12));
+            animation: fallAndFade linear forwards;
+        }
+
+        @keyframes fallAndFade {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.2; } 
+            85% { opacity: 0.2; }
+            100% { transform: translateY(115vh) rotate(180deg) scale(1.1); opacity: 0; }
+        }
+
+        /* --- AJUSTES EN MÓVILES --- */
+        @media (max-width: 900px) {
+            .visual-section {
+                display: none;
+            }
+            .form-section {
+                max-width: 100%;
+                padding: 40px 24px;
+            }
+            .emoji-container {
+                width: 100vw;
+                left: 0;
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(30, 58, 138, 0.05) 100%);
+                z-index: 1;
+            }
+            .falling-emoji {
+                animation-name: fallAndFadeMobile;
+            }
+        }
+
+        @keyframes fallAndFadeMobile {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+            85% { opacity: 0.15; }
+            100% { transform: translateY(115vh) rotate(180deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="emoji-container" id="emojiContainer"></div>
+
+    <div class="login-container">
+        
+        <div class="form-section">
+            <div class="brand">
+                <h1>Roomly</h1>
+                <p id="subtitle">Encuentra tu lugar perfecto</p>
+            </div>
+
+            <div class="error-banner" id="errorBanner">
+                ⚠️ El nombre de usuario o la contraseña no coinciden.
+            </div>
+
+            <div id="loginForm" class="form-container active">
+                <form action="/LoginServlet" method="POST">
+                    <div class="form-group">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" name="usuario" placeholder="Ingresa tu nombre de usuario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" name="passPlana" placeholder="Ingresa tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn">Comenzar viaje</button>
+                </form>
+
+                <div class="divider">o</div>
+
+                <div class="switch-form">
+                    ¿Eres nuevo en Roomly? <a onclick="showRegister()">Crea una cuenta</a>
+                </div>
+            </div>
+
+            <div id="registerForm" class="form-container">
+                <form action="RegistroServlet" method="POST">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apellidos</label>
+                        <input type="text" name="apellidos" placeholder="Tus apellidos" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" name="usuario" placeholder="Nombre de usuario único" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" name="email" placeholder="nombre@ejemplo.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" name="telefono" placeholder="Número de contacto" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" name="passPlana" placeholder="Mínimo 6 caracteres" required>
+                    </div>
+
+                    <button type="submit" class="btn">Registrarse</button>
+                </form>
+
+                <div class="divider">o</div>
+
+                <div class="switch-form">
+                    ¿Ya tienes una cuenta? <a onclick="showLogin()">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-section">
+            
+            <div class="visual-header-text">
+                <h2>Espacios que inspiran tus mejores historias.</h2>
+                <p>Únete a miles de viajeros que ya han descubierto habitaciones perfectas, estancias verificadas y experiencias inolvidables alrededor del mundo.</p>
+            </div>
+
+            <div class="reviews-marquee-wrapper">
+                <div class="marquee-track">
+                    
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format&fit=crop&q=80" alt="Habitación Nórdica">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Sofía Martínez</h4>
+                                    <p>Estudio Loft en Madrid</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"El apartamento superó mis expectativas. Idéntico a las fotos, impecable y súper céntrico."</p>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=500&auto=format&fit=crop&q=80" alt="Cabaña de Madera">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Carlos Mendoza</h4>
+                                    <p>Cabaña Alpina en Bariloche</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"Desconectarse aquí fue un sueño. La gestión a través de Roomly fue transparente y muy ágil."</p>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=500&auto=format&fit=crop&q=80" alt="Habitación Luminosa">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Laura Croft</h4>
+                                    <p>Suite Deluxe en Londres</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"La seguridad de los alojamientos verificados es lo mejor. Cero sorpresas desagradables al llegar."</p>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format&fit=crop&q=80" alt="Habitación Nórdica">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Sofía Martínez</h4>
+                                    <p>Estudio Loft en Madrid</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"El apartamento superó mis expectativas. Idéntico a las fotos, impecable y súper céntrico."</p>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=500&auto=format&fit=crop&q=80" alt="Cabaña de Madera">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Carlos Mendoza</h4>
+                                    <p>Cabaña Alpina en Bariloche</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"Desconectarse aquí fue un sueño. La gestión a través de Roomly fue transparente y muy ágil."</p>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <img class="room-photo" src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=500&auto=format&fit=crop&q=80" alt="Habitación Luminosa">
+                        <div class="review-body">
+                            <div class="review-user-info">
+                                <div>
+                                    <h4>Laura Croft</h4>
+                                    <p>Suite Deluxe en Londres</p>
+                                </div>
+                                <div class="review-stars">★★★★★</div>
+                            </div>
+                            <p class="review-text">"La seguridad de los alojamientos verificados es lo mejor. Cero sorpresas desagradables al llegar."</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'true') {
+                document.getElementById('errorBanner').style.display = 'block';
+            }
+        });
+
+        function showRegister() {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('subtitle').textContent = 'Crea tu cuenta en segundos';
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('subtitle').textContent = 'Encuentra tu lugar perfecto';
+        }
+
+        /* --- LÓGICA DE EMOJIS --- */
+        const container = document.getElementById('emojiContainer');
+        const emojis = ['🧳', '✈️', '🛌', '🏠'];
+
+        function createEmoji() {
+            const emojiEl = document.createElement('div');
+            emojiEl.classList.add('falling-emoji');
+            
+            emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emojiEl.style.left = Math.random() * 100 + '%';
+            
+            const duration = Math.random() * 4 + 6;
+            emojiEl.style.animationDuration = duration + 's';
+            
+            emojiEl.style.fontSize = Math.random() * 35 + 45 + 'px';
+
+            container.appendChild(emojiEl);
+
+            setTimeout(() => {
+                emojiEl.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createEmoji, 500);
+    </script>
+</body>
+</html>

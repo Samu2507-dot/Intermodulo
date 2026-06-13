@@ -22,7 +22,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/LoginVista.fxml"));
             Parent root = loader.load();
 
-            // Configuramos la ventana física de Windows
+
             primaryStage.setTitle("Roomly - Control de Alojamientos (AWS)");
             primaryStage.setScene(new Scene(root, 800, 550));
             primaryStage.setResizable(false);
