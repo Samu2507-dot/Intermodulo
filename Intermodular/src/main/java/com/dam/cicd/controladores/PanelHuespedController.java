@@ -126,6 +126,22 @@ public class PanelHuespedController {
 
         EntityManager em = JPAUtil.getEntityManager();
         try {
+
+            String jpql = "SELECT COUNT(r) FROM Reserva r WHERE r.alojamiento.id = :idAlojamiento " +
+                    "AND NOT (r.fechaSalida <= :inicio OR r.fechaEntrada >= :fin)";
+
+            Long solapamientos = em.createQuery(jpql, Long.class)
+                    .setParameter("idAlojamiento", seleccionado.getIdAlojamiento())
+                    .setParameter("inicio", dateInicio.getValue())
+                    .setParameter("fin", dateFin.getValue())
+                    .getSingleResult();
+
+            if (solapamientos > 0) {
+                lblMensaje.setText("Error: El alojamiento ya está reservado en esas fechas.");
+                return;
+            }
+
+
             em.getTransaction().begin();
 
             long numNoches = Math.max(1, ChronoUnit.DAYS.between(dateInicio.getValue(), dateFin.getValue()));
@@ -144,7 +160,8 @@ public class PanelHuespedController {
 
             lblMensaje.setText("¡Reserva realizada! Total: " + total + "€");
             tablaAlojamientos.getSelectionModel().clearSelection();
-            dateInicio.setValue(null); dateFin.setValue(null);
+            dateInicio.setValue(null);
+            dateFin.setValue(null);
             cargarMisReservas();
 
         } catch (Exception e) {

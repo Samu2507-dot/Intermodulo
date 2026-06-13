@@ -71,7 +71,7 @@ public class AnfitrionServicio {
      * @param nuevoPrecio Nuevo precio por día.
      * @throws MantenimientoException Si el alojamiento no existe o falla la actualización.
      */
-    public void modificarAnuncio(Integer idAlojamiento, String nuevoNombre, BigDecimal nuevoPrecio) throws MantenimientoException {
+    public void modificarAnuncio(Integer idAlojamiento, String nuevoNombre, String nuevaDireccion,BigDecimal nuevoPrecio) throws MantenimientoException {
         em.getTransaction().begin();
         try {
             Alojamiento alojamiento = em.find(Alojamiento.class, idAlojamiento);
@@ -81,6 +81,7 @@ public class AnfitrionServicio {
             }
 
             alojamiento.setNombre(nuevoNombre);
+            alojamiento.setDireccion(nuevaDireccion);
             alojamiento.setPrecioDia(nuevoPrecio);
             em.merge(alojamiento);
 
