@@ -98,7 +98,9 @@ public class UsuarioServicio {
      * @throws AutenticacionException Si ocurre un conflicto de unicidad en la base de datos o ante fallos
      * críticos en la transacción de guardado.
      */
-    public Anfitrion registrarAnfitrion(String nombre, String apellidos, String email, String telefono, String usuario, String passPlana) throws AutenticacionException {
+    public Anfitrion registrarAnfitrion(String nombre, String apellidos,
+                                        String email, String telefono, String usuario,
+                                        String passPlana) throws AutenticacionException {
         Anfitrion a = new Anfitrion();
         a.setNombre(nombre);
         a.setApellidos(apellidos);
