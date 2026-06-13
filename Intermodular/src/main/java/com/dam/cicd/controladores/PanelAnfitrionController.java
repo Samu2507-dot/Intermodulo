@@ -4,6 +4,7 @@ import com.dam.cicd.entidades.*;
 import com.dam.cicd.servicios.AnfitrionServicio;
 import com.dam.cicd.utilidades.JPAUtil;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,11 +66,24 @@ public class PanelAnfitrionController {
             }
         });
 
-        colAlojamiento.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getAlojamiento().getNombre()));
-        colHuesped.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getHuesped().getNombre()));
-        colEntrada.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getFechaEntrada().toString()));
-        colEstadoReserva.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        // Columnas personalizadas
+        colAlojamiento.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAlojamiento().getNombre()));
+        colHuesped.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHuesped().getNombre()));
+        colEntrada.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaEntrada().toString()));
+        setupColumn(colEstadoReserva, "estado");
 
+        // Columnas usando método genérico
+        setupFotoColumn();
+        setupColumn(colNombreAlojamiento, "nombre");
+        setupColumn(colDireccionAlojamiento, "direccion");
+        setupColumn(colPrecioAlojamiento, "precioDia");
+    }
+
+    private <T, U> void setupColumn(TableColumn<T, U> column, String property) {
+        column.setCellValueFactory(new PropertyValueFactory<>(property));
+    }
+
+    private void setupFotoColumn() {
         colFoto.setCellValueFactory(new PropertyValueFactory<>("fotoUrl"));
         colFoto.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -84,23 +98,13 @@ public class PanelAnfitrionController {
                 }
             }
         });
-        colNombreAlojamiento.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colDireccionAlojamiento.setCellValueFactory(new PropertyValueFactory<>("direccion"));
-        colPrecioAlojamiento.setCellValueFactory(new PropertyValueFactory<>("precioDia"));
     }
 
-    /**
-     * Asigna el anfitrión que ha iniciado sesión y carga los datos correspondientes en la interfaz.
-     * @param anfitrion El objeto Anfitrión logueado.
-     */
     public void setAnfitrion(Anfitrion anfitrion) {
         this.anfitrionLogueado = anfitrion;
         cargarDatos();
     }
 
-    /**
-     * Ejecuta las llamadas de carga de datos de forma asíncrona para no bloquear la UI.
-     */
     private void cargarDatos() {
         Platform.runLater(() -> {
             cargarReservasRecibidas();
@@ -108,9 +112,6 @@ public class PanelAnfitrionController {
         });
     }
 
-    /**
-     * Consulta y carga en la tabla todos los alojamientos registrados por el anfitrión.
-     */
     private void cargarMisAlojamientos() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -123,9 +124,6 @@ public class PanelAnfitrionController {
         }
     }
 
-    /**
-     * Consulta y carga en la tabla las reservas asociadas a los alojamientos del anfitrión.
-     */
     private void cargarReservasRecibidas() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -138,9 +136,6 @@ public class PanelAnfitrionController {
         }
     }
 
-    /**
-     * Gestiona la acción de publicar un nuevo alojamiento validando los datos del formulario.
-     */
     @FXML
     private void handlePublicar() {
         try {
@@ -154,21 +149,14 @@ public class PanelAnfitrionController {
         }
     }
 
-    /**
-     * Actualiza la información de un alojamiento previamente seleccionado en la tabla.
-     */
     @FXML
     private void handleGuardarCambios() {
-
         Alojamiento seleccionado = tablaMisAlojamientos.getSelectionModel().getSelectedItem();
-
         if (seleccionado == null) {
             lblMensaje.setText("Selecciona un alojamiento.");
             return;
         }
-
         try {
-
             servicio.modificarAnuncio(
                     seleccionado.getIdAlojamiento(),
                     txtNombre.getText(),
@@ -176,34 +164,25 @@ public class PanelAnfitrionController {
                     new BigDecimal(txtPrecio.getText())
             );
 
-
             seleccionado.setNombre(txtNombre.getText());
             seleccionado.setDireccion(txtDireccion.getText());
             seleccionado.setPrecioDia(new BigDecimal(txtPrecio.getText()));
 
-
             tablaMisAlojamientos.refresh();
-
             lblMensaje.setText("Cambios guardados correctamente.");
-
         } catch (NumberFormatException e) {
             lblMensaje.setText("Error: El precio debe ser un número válido.");
         } catch (Exception e) {
             lblMensaje.setText("Error al guardar: " + e.getMessage());
         }
     }
-    /**
-     * Calcula y muestra el total de ingresos facturados por el anfitrión.
-     */
+
     @FXML
     private void handleVerFacturacion() {
         BigDecimal total = servicio.obtenerTotalFacturado(anfitrionLogueado.getIdAnfitrion());
         lblFacturacion.setText("Total: " + total + " €");
     }
 
-    /**
-     * Limpia los campos de texto del formulario y deselecciona cualquier elemento de la tabla.
-     */
     @FXML
     private void handleLimpiar() {
         txtNombre.clear();
@@ -213,9 +192,6 @@ public class PanelAnfitrionController {
         tablaMisAlojamientos.getSelectionModel().clearSelection();
     }
 
-    /**
-     * Cierra la sesión actual y redirige al usuario a la vista de login.
-     */
     @FXML
     private void handleCerrarSesion() {
         try {
