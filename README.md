@@ -23,10 +23,14 @@ Creamos 3 excepciones personalizadas de tipo *Checked* (de las que te obligan a 
 * Metimos **validaciones tempranas** para frenar los pies al usuario antes de romper nada.
 * Controla el inicio de sesión seguro y el registro usando **BCrypt** para que las contraseñas no se guarden en texto plano (seguridad ante todo).
 
-### 4. Clase Principal (`Principal.java`)
-* La clase que gestiona todas las operaciones
-* Está gestionado con un **Try-With-Resources** que abre el `EntityManagerFactory` y el `EntityManager`, y se encarga de cerrarlos automáticamente sin dejar conexiones colgadas por ahí (adiós fugas de memoria).
-* Captura los errores de forma ordenada: primero va a por nuestras excepciones específicas y si no, ya cae en la genérica.
+### 3. Controladores (`controller`)
+* Código limpio: Hemos creado métodos genéricos (setupColumn) para configurar las tablas, evitando repetir el mismo código una y otra vez.
+* Interfaz fluida: Usamos Platform.runLater para cargar los datos de la base de datos de forma asíncrona, así la aplicación no se queda bloqueada mientras busca la información.
+* Usuario informado: Cada acción (como publicar un alojamiento o actualizar datos) está protegida con bloques try-catch que muestran mensajes claros en pantalla si algo sale mal, evitando que la aplicación se cierre de repente.
+
+### 4. Clase Principal (`MainApp.java`)
+* Punto de Entrada: Extiende de Application de JavaFX para orquestar el ciclo de vida completo de la interfaz gráfica, asegurando una carga fluida de los archivos .fxml
+* Gestión de Recursos y Ciclo de Vida: Implementa el método stop() para ejecutar JPAUtil.shutdown(), garantizando que la conexión con el servidor (AWS) se cierre de forma ordenada y segura al salir de la aplicación, evitando conexiones huérfanas.
 
 ---
 
