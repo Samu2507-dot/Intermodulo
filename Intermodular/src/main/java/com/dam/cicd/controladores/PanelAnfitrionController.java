@@ -159,20 +159,39 @@ public class PanelAnfitrionController {
      */
     @FXML
     private void handleGuardarCambios() {
+
         Alojamiento seleccionado = tablaMisAlojamientos.getSelectionModel().getSelectedItem();
+
         if (seleccionado == null) {
             lblMensaje.setText("Selecciona un alojamiento.");
             return;
         }
+
         try {
-            servicio.modificarAnuncio(seleccionado.getIdAlojamiento(), txtNombre.getText(), new BigDecimal(txtPrecio.getText()));
+
+            servicio.modificarAnuncio(
+                    seleccionado.getIdAlojamiento(),
+                    txtNombre.getText(),
+                    txtDireccion.getText(),
+                    new BigDecimal(txtPrecio.getText())
+            );
+
+
+            seleccionado.setNombre(txtNombre.getText());
+            seleccionado.setDireccion(txtDireccion.getText());
+            seleccionado.setPrecioDia(new BigDecimal(txtPrecio.getText()));
+
+
+            tablaMisAlojamientos.refresh();
+
             lblMensaje.setText("Cambios guardados correctamente.");
-            cargarDatos();
+
+        } catch (NumberFormatException e) {
+            lblMensaje.setText("Error: El precio debe ser un número válido.");
         } catch (Exception e) {
-            lblMensaje.setText("Error: " + e.getMessage());
+            lblMensaje.setText("Error al guardar: " + e.getMessage());
         }
     }
-
     /**
      * Calcula y muestra el total de ingresos facturados por el anfitrión.
      */

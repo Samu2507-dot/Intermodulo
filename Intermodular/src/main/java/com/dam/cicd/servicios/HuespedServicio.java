@@ -40,7 +40,9 @@ public class HuespedServicio {
      * @throws ReservaInvalidaException Si la fecha de check-out resulta previa al check-in, si no se localiza
      * al huésped o al alojamiento en los registros, o ante cualquier error crítico en la base de datos.
      */
-    public Reserva realizarReserva(Integer idHuesped, Integer idAlojamiento, LocalDate entrada, LocalDate salida, BigDecimal precioTotal) throws ReservaInvalidaException {
+    public Reserva realizarReserva(Integer idHuesped, Integer idAlojamiento,
+                                   LocalDate entrada, LocalDate salida, BigDecimal
+                                           precioTotal) throws ReservaInvalidaException {
 
         if (salida != null && entrada != null && salida.isBefore(entrada)) {
             throw new ReservaInvalidaException("La fecha de salida no puede ser anterior a la fecha de entrada.");
