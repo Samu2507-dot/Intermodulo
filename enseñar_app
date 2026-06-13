@@ -1,0 +1,1 @@
+java -cp "ROOMLY-1.0.jar;dependency\*" com.dam.cicd.Launcher
